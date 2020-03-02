@@ -79,7 +79,7 @@ const config: Configuration = {
 				light: {
 					primary: colors.indigo,
 					secondary: colors.pink,
-					accent: colors.indigo,
+					accent: colors.pink,
 					error: colors.red.accent3
 				}
 			}

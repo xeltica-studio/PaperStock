@@ -39,13 +39,27 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" color="primary" dark fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title>
+        <v-icon>mdi-file-document-box-multiple</v-icon>
+        PaperStock
+      </v-toolbar-title>
       <v-spacer />
     </v-app-bar>
     <v-content>
       <v-container>
+        <v-btn
+          fab
+          bottom
+          right
+          fixed
+          color="secondary"
+          dark
+          @click="createNote"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
         <nuxt />
       </v-container>
     </v-content>
@@ -59,46 +73,7 @@ export default {
 			clipped: true,
 			drawer: false,
 			fixed: true,
-			items: [
-				{
-					icon: "mdi-home",
-					title: "ダッシュボード",
-					to: "/"
-				},
-				{
-					icon: "mdi-account-multiple",
-					title: "グループ",
-					to: "/groups"
-				},
-				{
-					icon: "mdi-pound",
-					title: "タグ",
-					to: "/tags"
-				},
-				{
-					icon: "mdi-account",
-					title: "ユーザー",
-					to: "/users"
-				},
-				{
-					icon: "mdi-bell",
-					title: "通知",
-					to: "/notifications"
-				},
-				{
-					icon: "mdi-help-circle-outline",
-					title: "ヘルプ",
-					to: "/help"
-				},
-				{
-					icon: "mdi-settings",
-					title: "環境設定",
-					to: "/settings"
-				}
-
-			],
-			miniVariant: true,
-			title: "PaperStock"
+			miniVariant: true
 		};
 	},
 	mounted () {
