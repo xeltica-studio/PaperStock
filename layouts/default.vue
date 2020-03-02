@@ -2,65 +2,53 @@
   <v-app dark>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
+      clipped
+      :mobile-break-point="768"
       app
     >
       <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
+        <v-list-item to="/" router exact>
+          <v-list-item-action><v-icon>mdi-home</v-icon></v-list-item-action>
+          <v-list-item-content><v-list-item-title>ダッシュボード<v-list-item-title /></v-list-item-title></v-list-item-content>
+        </v-list-item>
+        <v-divider />
+        <v-list-item to="/groups" router exact>
+          <v-list-item-action><v-icon>mdi-account-multiple</v-icon></v-list-item-action>
+          <v-list-item-content><v-list-item-title>グループ<v-list-item-title /></v-list-item-title></v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/tags" router exact>
+          <v-list-item-action><v-icon>mdi-pound</v-icon></v-list-item-action>
+          <v-list-item-content><v-list-item-title>タグ<v-list-item-title /></v-list-item-title></v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/users" router exact>
+          <v-list-item-action><v-icon>mdi-account</v-icon></v-list-item-action>
+          <v-list-item-content><v-list-item-title>ユーザー<v-list-item-title /></v-list-item-title></v-list-item-content>
+        </v-list-item>
+        <v-divider />
+        <v-list-item to="/notifications" router exact>
+          <v-list-item-action><v-icon>mdi-bell</v-icon></v-list-item-action>
+          <v-list-item-content><v-list-item-title>通知<v-list-item-title /></v-list-item-title></v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/help" router exact>
+          <v-list-item-action><v-icon>mdi-help-circle-outline</v-icon></v-list-item-action>
+          <v-list-item-content><v-list-item-title>ヘルプ<v-list-item-title /></v-list-item-title></v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/settings" router exact>
+          <v-list-item-action><v-icon>mdi-settings</v-icon></v-list-item-action>
+          <v-list-item-content><v-list-item-title>設定<v-list-item-title /></v-list-item-title></v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
     </v-app-bar>
     <v-content>
       <v-container>
         <nuxt />
       </v-container>
     </v-content>
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer :fixed="fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
   </v-app>
 </template>
 
@@ -68,25 +56,49 @@
 export default {
 	data () {
 		return {
-			clipped: false,
-			drawer: false,
-			fixed: false,
+			clipped: true,
+			drawer: true,
+			fixed: true,
 			items: [
 				{
-					icon: "mdi-apps",
-					title: "Welcome",
+					icon: "mdi-home",
+					title: "ダッシュボード",
 					to: "/"
 				},
 				{
-					icon: "mdi-chart-bubble",
-					title: "Inspire",
-					to: "/inspire"
+					icon: "mdi-account-multiple",
+					title: "グループ",
+					to: "/groups"
+				},
+				{
+					icon: "mdi-pound",
+					title: "タグ",
+					to: "/tags"
+				},
+				{
+					icon: "mdi-account",
+					title: "ユーザー",
+					to: "/users"
+				},
+				{
+					icon: "mdi-bell",
+					title: "通知",
+					to: "/notifications"
+				},
+				{
+					icon: "mdi-help-circle-outline",
+					title: "ヘルプ",
+					to: "/help"
+				},
+				{
+					icon: "mdi-settings",
+					title: "環境設定",
+					to: "/settings"
 				}
+
 			],
-			miniVariant: false,
-			right: true,
-			rightDrawer: false,
-			title: "Vuetify.js"
+			miniVariant: true,
+			title: "PaperStock"
 		};
 	}
 };

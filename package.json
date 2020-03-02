@@ -1,13 +1,13 @@
 {
-  "name": "paperstock",
+  "name": "paperstock-front",
   "version": "1.0.0",
   "description": "Self-hosted Private-use Wiki Engine",
   "author": "Xeltica",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register server/index.ts",
+    "dev": "nuxt-ts",
     "build": "nuxt-ts build",
-    "start": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register server/index.ts",
+    "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
     "lint": "eslint --fix --ext .js,.ts,.vue --ignore-path .gitignore .",
     "test": "jest"
@@ -17,15 +17,8 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/pwa": "^3.0.0-0",
     "@types/esm": "^3.2.0",
-    "@types/koa": "^2.11.2",
-    "@types/koa-router": "^7.4.0",
-    "cross-env": "^5.2.0",
-    "koa": "^2.6.2",
-    "koa-router": "^8.0.8",
-    "mongodb": "^3.5.4",
-    "nuxt": "^2.0.0",
-    "ts-node": "^8.6.2",
-    "ts-node-dev": "^1.0.0-pre.44"
+    "npm-run-all": "^4.1.5",
+    "nuxt": "^2.0.0"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.5.8",

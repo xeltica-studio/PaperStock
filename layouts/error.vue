@@ -1,14 +1,13 @@
 <template>
   <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
+    <v-card class="mx-auto pa-5" max-width="800">
+      <v-card-title class="display-2" v-text="errorMessage" />
+      <v-card-actions>
+        <v-btn exact to="/">
+          トップページに戻る
+        </v-btn>
+      </v-card-actions>
+    </v-card>
   </v-app>
 </template>
 
@@ -27,9 +26,13 @@ export default {
 			otherError: "An error occurred"
 		};
 	},
+	computed: {
+		errorMessage () {
+			return this.error.statusCode === 404 ? this.pageNotFound : this.otherError;
+		}
+	},
 	head () {
-		const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError;
+		const title = this.errorMessage;
 		return {
 			title
 		};
