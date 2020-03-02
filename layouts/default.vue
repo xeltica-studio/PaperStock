@@ -57,7 +57,7 @@ export default {
 	data () {
 		return {
 			clipped: true,
-			drawer: true,
+			drawer: false,
 			fixed: true,
 			items: [
 				{
@@ -100,6 +100,11 @@ export default {
 			miniVariant: true,
 			title: "PaperStock"
 		};
+	},
+	mounted () {
+		this.$nextTick(() => {
+			this.drawer = document.documentElement.clientWidth > 768;
+		});
 	}
 };
 </script>
