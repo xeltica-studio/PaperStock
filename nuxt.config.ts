@@ -1,33 +1,33 @@
-import { Configuration } from '@nuxt/types'
+import { Configuration } from "@nuxt/types";
 
-const colors = require('vuetify/es5/util/colors').default
+const colors = require("vuetify/es5/util/colors").default;
 
 const config: Configuration = {
-	mode: 'universal',
+	mode: "universal",
 	/*
-	 ** Headers of the page
-	 */
+   ** Headers of the page
+   */
 	head: {
-		titleTemplate: '%s - ' + process.env.npm_package_name,
-		title: process.env.npm_package_name || '',
+		titleTemplate: "%s - " + process.env.npm_package_name,
+		title: process.env.npm_package_name || "",
 		meta: [
-			{ charset: 'utf-8' },
+			{ charset: "utf-8" },
 			{
-				name: 'viewport',
-				content: 'width=device-width, initial-scale=1'
+				name: "viewport",
+				content: "width=device-width, initial-scale=1"
 			},
 			{
-				hid: 'description',
-				name: 'description',
-				content: process.env.npm_package_description || ''
+				hid: "description",
+				name: "description",
+				content: process.env.npm_package_description || ""
 			}
 		],
-		link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+		link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
 	},
 	/*
 	 ** Customize the progress-bar color
 	 */
-	loading: { color: '#fff' },
+	loading: { color: "#fff" },
 	/*
 	 ** Global CSS
 	 */
@@ -41,17 +41,17 @@ const config: Configuration = {
 	 */
 	buildModules: [
 		// Doc: https://github.com/nuxt-community/eslint-module
-		'@nuxtjs/eslint-module',
-		'@nuxt/typescript-build',
-		'@nuxtjs/vuetify'
+		"@nuxtjs/eslint-module",
+		"@nuxt/typescript-build",
+		"@nuxtjs/vuetify"
 	],
 	/*
 	 ** Nuxt.js modules
 	 */
 	modules: [
 		// Doc: https://axios.nuxtjs.org/usage
-		'@nuxtjs/axios',
-		'@nuxtjs/pwa'
+		"@nuxtjs/axios",
+		"@nuxtjs/pwa"
 	],
 	/*
 	 ** Axios module configuration
@@ -63,9 +63,9 @@ const config: Configuration = {
 	 ** https://github.com/nuxt-community/vuetify-module
 	 */
 	vuetify: {
-		customVariables: ['~/assets/variables.scss'],
+		customVariables: ["~/assets/variables.scss"],
 		theme: {
-			dark: true,
+			dark: false,
 			themes: {
 				dark: {
 					primary: colors.blue.darken2,
@@ -75,6 +75,12 @@ const config: Configuration = {
 					warning: colors.amber.base,
 					error: colors.deepOrange.accent4,
 					success: colors.green.accent3
+				},
+				light: {
+					primary: colors.indigo,
+					secondary: colors.pink,
+					accent: colors.indigo,
+					error: colors.red.accent3
 				}
 			}
 		}
@@ -83,11 +89,8 @@ const config: Configuration = {
 	 ** Build configuration
 	 */
 	build: {
-		/*
-		 ** You can extend webpack config here
-		 */
-		// extend(config, ctx) {}
+		hardSource: true
 	}
-} 
+};
 
-export default config
+export default config;
