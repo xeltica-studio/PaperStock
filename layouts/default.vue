@@ -7,11 +7,24 @@
       app
     >
       <v-list>
+        <v-list-item>
+          <v-list-item-avatar color="red">
+            <span class="white--text headline">X</span>
+          </v-list-item-avatar>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title class="title">
+              Xeltica
+            </v-list-item-title>
+            <v-list-item-subtitle>開発部</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider />
         <v-list-item to="/" router exact>
           <v-list-item-action><v-icon>mdi-home</v-icon></v-list-item-action>
           <v-list-item-content><v-list-item-title>ダッシュボード<v-list-item-title /></v-list-item-title></v-list-item-content>
         </v-list-item>
-        <v-divider />
         <v-subheader>ノートをさがす</v-subheader>
         <v-list-item to="/groups" router exact>
           <v-list-item-action><v-icon>mdi-account-multiple</v-icon></v-list-item-action>
