@@ -1,4 +1,6 @@
 import { Configuration } from "@nuxt/types";
+import Sass from "sass";
+import Fiber from "fibers";
 
 const colors = require("vuetify/es5/util/colors").default;
 
@@ -35,7 +37,9 @@ const config: Configuration = {
 	/*
 	 ** Plugins to load before mounting the App
 	 */
-	plugins: [],
+	plugins: [
+		"@/plugins/global-components.ts"
+	],
 	/*
 	 ** Nuxt.js dev-modules
 	 */
@@ -63,7 +67,6 @@ const config: Configuration = {
 	 ** https://github.com/nuxt-community/vuetify-module
 	 */
 	vuetify: {
-		customVariables: ["~/assets/variables.scss"],
 		theme: {
 			dark: false,
 			themes: {
@@ -89,7 +92,15 @@ const config: Configuration = {
 	 ** Build configuration
 	 */
 	build: {
-		hardSource: true
+		hardSource: true,
+		loaders: {
+			scss: {
+				implementation: Sass,
+				sassOptions: {
+					fiber: Fiber
+				}
+			}
+		}
 	}
 };
 

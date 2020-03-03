@@ -1,5 +1,6 @@
 <template>
   <v-layout>
+    <ps-create-note-button />
     <v-flex>
       <v-list two-line>
         <v-subheader>ピン留めされたノート</v-subheader>

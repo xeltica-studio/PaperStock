@@ -12,6 +12,7 @@
           <v-list-item-content><v-list-item-title>ダッシュボード<v-list-item-title /></v-list-item-title></v-list-item-content>
         </v-list-item>
         <v-divider />
+        <v-subheader>ノートをさがす</v-subheader>
         <v-list-item to="/groups" router exact>
           <v-list-item-action><v-icon>mdi-account-multiple</v-icon></v-list-item-action>
           <v-list-item-content><v-list-item-title>グループ<v-list-item-title /></v-list-item-title></v-list-item-content>
@@ -37,6 +38,9 @@
           <v-list-item-action><v-icon>mdi-settings</v-icon></v-list-item-action>
           <v-list-item-content><v-list-item-title>設定<v-list-item-title /></v-list-item-title></v-list-item-content>
         </v-list-item>
+        <v-subheader>
+          Powered by PaperStock
+        </v-subheader>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" color="primary" dark fixed app>
@@ -49,17 +53,6 @@
     </v-app-bar>
     <v-content>
       <v-container>
-        <v-btn
-          fab
-          bottom
-          right
-          fixed
-          color="secondary"
-          dark
-          @click="createNote"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
         <nuxt />
       </v-container>
     </v-content>
