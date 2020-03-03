@@ -2,8 +2,8 @@
   <v-app dark>
     <v-navigation-drawer
       v-model="drawer"
+      mobile-break-point="sm"
       clipped
-      :mobile-break-point="768"
       app
     >
       <v-list>
@@ -43,7 +43,7 @@
         </v-subheader>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" color="primary" dark fixed app>
+    <v-app-bar :clipped-left="true" color="primary" dark fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
         <v-icon>mdi-file-document-box-multiple</v-icon>
@@ -59,20 +59,14 @@
   </v-app>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
 	data () {
 		return {
-			clipped: true,
-			drawer: false,
-			fixed: true,
-			miniVariant: true
+			drawer: null as boolean | null
 		};
-	},
-	mounted () {
-		this.$nextTick(() => {
-			this.drawer = document.documentElement.clientWidth > 768;
-		});
 	}
-};
+});
 </script>
