@@ -6,6 +6,9 @@ const colors = require("vuetify/es5/util/colors").default;
 
 const config: Configuration = {
 	mode: "universal",
+	server: {
+		port: 8080
+	},
 	/*
    ** Headers of the page
    */
