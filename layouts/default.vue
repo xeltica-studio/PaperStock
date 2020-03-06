@@ -2,18 +2,17 @@
 	<v-app dark>
 		<v-navigation-drawer
 			v-model="drawer"
+			:mini-variant="miniVariant"
 			:mobile-break-point="$vuetify.breakpoint.thresholds.sm"
 			clipped
 			app
 		>
 			<v-list>
-				<v-list-item>
+				<v-list-item class="px-2" to="/userId">
 					<v-list-item-avatar color="red">
 						<span class="white--text headline">X</span>
 					</v-list-item-avatar>
-				</v-list-item>
-				<v-list-item>
-					<v-list-item-content>
+					<v-list-item-content v-show="!miniVariant">
 						<v-list-item-title class="title">
 							Xeltica
 						</v-list-item-title>
@@ -25,7 +24,10 @@
 					<v-list-item-action><v-icon>mdi-home</v-icon></v-list-item-action>
 					<v-list-item-content><v-list-item-title>ダッシュボード<v-list-item-title /></v-list-item-title></v-list-item-content>
 				</v-list-item>
-				<v-subheader>ノートをさがす</v-subheader>
+				<v-subheader v-show="!miniVariant">
+					ノートをさがす
+				</v-subheader>
+				<v-divider v-show="miniVariant" />
 				<v-list-item to="/groups" router exact>
 					<v-list-item-action><v-icon>mdi-account-multiple</v-icon></v-list-item-action>
 					<v-list-item-content><v-list-item-title>グループ<v-list-item-title /></v-list-item-title></v-list-item-content>
@@ -51,15 +53,15 @@
 					<v-list-item-action><v-icon>mdi-settings</v-icon></v-list-item-action>
 					<v-list-item-content><v-list-item-title>設定<v-list-item-title /></v-list-item-title></v-list-item-content>
 				</v-list-item>
-				<v-subheader>
+				<v-subheader v-show="!miniVariant">
 					Powered by PaperStock
 				</v-subheader>
 			</v-list>
 		</v-navigation-drawer>
 		<v-app-bar :clipped-left="true" color="primary" dark fixed app>
 			<v-app-bar-nav-icon v-if="$vuetify.breakpoint.smAndDown" @click.stop="drawer = !drawer" />
+			<v-app-bar-nav-icon v-else @click.stop="useMiniVariant = !useMiniVariant" />
 			<v-toolbar-title>
-				<v-icon>mdi-file-document-box-multiple</v-icon>
 				PaperStock
 			</v-toolbar-title>
 			<v-spacer />
@@ -78,8 +80,12 @@ import Vue from "vue";
 export default Vue.extend({
 	data () {
 		return {
-			drawer: null as boolean | null
+			drawer: null as boolean | null,
+			useMiniVariant: false
 		};
+	},
+	computed: {
+		miniVariant () { return this.useMiniVariant && this.$vuetify.breakpoint.smAndUp; }
 	}
 });
 </script>
