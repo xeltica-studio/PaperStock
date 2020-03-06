@@ -1,15 +1,15 @@
 <template>
-  <v-btn
-    fab
-    bottom
-    right
-    fixed
-    dark
-    color="secondary"
-    @click="createNote"
-  >
-    <v-icon>mdi-plus</v-icon>
-  </v-btn>
+	<v-btn
+		fab
+		bottom
+		right
+		fixed
+		dark
+		color="secondary"
+		@click="createNote"
+	>
+		<v-icon>mdi-plus</v-icon>
+	</v-btn>
 </template>
 
 <script lang="ts">

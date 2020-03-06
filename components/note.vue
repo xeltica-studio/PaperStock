@@ -1,9 +1,9 @@
 <template>
-  <div class="root">
-    <h1>{{ title }}</h1>
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <div v-html="markdown" />
-  </div>
+	<div class="root">
+		<h1>{{ title }}</h1>
+		<!-- eslint-disable-next-line vue/no-v-html -->
+		<div v-html="markdown" />
+	</div>
 </template>
 
 <script lang="ts">

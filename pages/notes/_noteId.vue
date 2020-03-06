@@ -1,10 +1,10 @@
 <template>
-  <v-layout>
-    <ps-create-note-button />
-    <v-flex>
-      <p>{{ noteId }}</p>
-    </v-flex>
-  </v-layout>
+	<v-layout>
+		<ps-create-note-button />
+		<v-flex>
+			<p>{{ noteId }}</p>
+		</v-flex>
+	</v-layout>
 </template>
 
 <script lang="ts">

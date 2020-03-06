@@ -1,5 +1,5 @@
 <template>
-  <x-note-editor @submit="onSubmit" @close="onClose" />
+	<x-note-editor @submit="onSubmit" @close="onClose" />
 </template>
 
 <script lang="ts">

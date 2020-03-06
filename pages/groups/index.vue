@@ -1,10 +1,10 @@
 <template>
-  <v-layout>
-    <ps-create-note-button />
-    <v-flex>
-      <p>wip</p>
-    </v-flex>
-  </v-layout>
+	<v-layout>
+		<ps-create-note-button />
+		<v-flex>
+			<p>wip</p>
+		</v-flex>
+	</v-layout>
 </template>
 
 <script lang="ts">
