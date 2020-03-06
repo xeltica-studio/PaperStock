@@ -2,12 +2,11 @@
 {
     "compilerOptions": {
       "target": "es2018",
-      "module": "esnext",
+      "module": "commonjs",
       "moduleResolution": "node",
       "lib": [
         "esnext",
         "esnext.asynciterable",
-        "dom"
       ],
       "esModuleInterop": true,
       "allowJs": true,
@@ -17,18 +16,15 @@
       "noEmit": true,
       "baseUrl": ".",
       "paths": {
+        "~/*": [
+          "./*"
+        ],
         "@/*": [
           "./*"
         ]
-      },
-      "types": [
-        "@types/node",
-        "@nuxt/types",
-        "vuetify"
-      ]
+      }
     },
     "exclude": [
-      "node_modules",
-      "server",
+      "node_modules"
     ]
   }
