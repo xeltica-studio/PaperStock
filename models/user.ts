@@ -7,4 +7,5 @@ export interface User {
     isAdmin: boolean;
     isModerator: boolean;
     iconUrl: string;
+    headerUrl: string;
 }
