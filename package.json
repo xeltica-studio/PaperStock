@@ -28,6 +28,7 @@
     "@types/koa-router": "^7.4.0",
     "@types/markdown-it": "^0.0.9",
     "@types/sass": "^1.16.0",
+    "cafy": "^15.2.1",
     "fibers": "^4.0.2",
     "highlight.js": "^9.18.1",
     "koa": "^2.11.0",

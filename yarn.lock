@@ -2803,6 +2803,11 @@ cache-loader@^4.1.0:
     neo-async "^2.6.1"
     schema-utils "^2.0.0"
 
+cafy@^15.2.1:
+  version "15.2.1"
+  resolved "https://registry.yarnpkg.com/cafy/-/cafy-15.2.1.tgz#5a55eaeb721c604c7dca652f3d555c392e5f995a"
+  integrity sha512-g2zOmFb63p6XcZ/zeMWKYP8YKQYNWnhJmi6K71Ql4EAFTAay31xF0PBPtdBCCfQ0fiETgWTMxKtySAVI/Od6aQ==
+
 caller-callsite@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/caller-callsite/-/caller-callsite-2.0.0.tgz#847e0fce0a223750a9a027c54b33731ad3154134"
