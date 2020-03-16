@@ -3,9 +3,11 @@
 		<ps-create-note-button />
 		<v-flex>
 			<v-list two-line>
-				<v-subheader>ピン留めされたノート</v-subheader>
+				<h1 class="title">
+					ピン留めされたノート
+				</h1>
 				<v-alert v-if="pinnedNotes.length === 0" outlined color="error">
-					まだねンだわ...。
+					ピン留めされたノートはまだありません。
 				</v-alert>
 				<v-list-item v-for="note in pinnedNotes" :key="note.id">
 					<v-list-item-content>
@@ -14,9 +16,14 @@
 					</v-list-item-content>
 				</v-list-item>
 
-				<v-subheader>最新のノート</v-subheader>
+				<h1 class="title">
+					最新のノート
+				</h1>
 				<v-alert v-if="pinnedNotes.length === 0" outlined color="error">
-					まだねンだわ...。
+					まだノートがありません。
+					<nuxt-link to="/notes/new">
+						初めてのノートを書きませんか？
+					</nuxt-link>
 				</v-alert>
 				<v-list-item v-for="note in recentNotes" :key="note.id">
 					<v-list-item-content>
