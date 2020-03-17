@@ -8,4 +8,5 @@ export interface User {
     isModerator: boolean;
     iconUrl: string;
     headerUrl: string;
+    createdAt: Date;
 }

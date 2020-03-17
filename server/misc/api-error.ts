@@ -8,5 +8,9 @@ export class ApiError extends Error {
 export const ErrorId = {
 	invalidParam: "INVALID_PARAM",
 	notAuthorized: "NOT_AUTHORIZED",
-	unknown: "UNKNOWN"
+	unknown: "UNKNOWN",
+	noSuchUser: "NO_SUCH_USER",
+	noSuchNote: "NO_SUCH_NOTE",
+	failedToAuthenticate: "FAILED_TO_AUTHENTICATE",
+	duplicated: "DUPLICATED"
 };
