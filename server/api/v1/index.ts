@@ -1,7 +1,8 @@
 import Router from "koa-router";
 import $ from "cafy";
 import { userNamePattern } from "@/misc/patterns";
-import { buildErrorResponse, buildResponse } from "~/server/utils/build-response";
+import { buildErrorResponse, buildResponse } from "@/server/misc/build-response";
+import { ApiError, ErrorId } from "@/server/misc/api-error";
 const router = new Router();
 
 router.get("/ping", (ctx, _) => {
@@ -13,16 +14,16 @@ router.get("/teapot", (ctx, _) => {
 	ctx.body = buildErrorResponse("I'm a teapot.", 418);
 });
 
-router.get("/undefined-error", (ctx, _)	 => {
-	const a = undefined as any;
-	ctx.body = a.undefinedProperty;
-});
-
 router.post("/signin", (ctx, _) => {
-	const name = $.str.match(userNamePattern).throw(ctx.query.userName);
-	const password = $.str.throw(ctx.query.password);
+	const name = ctx.query.userName as string;
+	const password = ctx.query.password as string;
 
-	ctx.body = buildResponse({ name, password });
+	if ($.str.match(userNamePattern).nok(name)) {
+		throw new ApiError("Invalid username", ErrorId.invalidParam);
+	}
+	if ($.str.nok(password)) {
+		throw new ApiError("Invalid password", ErrorId.invalidParam);
+	}
 });
 
 export default router.routes();

@@ -3,7 +3,8 @@ import Router from "koa-router";
 import consola from "consola";
 import chokidar from "chokidar";
 import esm from "esm";
-import { buildErrorResponse } from "./utils/build-response";
+import { buildErrorResponse } from "./misc/build-response";
+import { ApiError } from "./misc/api-error";
 import config from "@/nuxt.config";
 import apiV1 from "@/server/api/v1";
 
@@ -22,8 +23,13 @@ app.use(async (ctx, next) => {
 			throw err;
 		}
 	} catch (err) {
-		ctx.status = err.status || 500;
-		ctx.body = buildErrorResponse(err.message, err.status);
+		if (err instanceof ApiError) {
+			ctx.status = 401;
+			ctx.body = buildErrorResponse(err.message, 401, err.errorId);
+		} else {
+			ctx.status = err.status || 500;
+			ctx.body = buildErrorResponse(err.message, err.status);
+		}
 	}
 });
 
