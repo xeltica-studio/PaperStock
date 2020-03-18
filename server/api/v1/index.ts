@@ -1,11 +1,12 @@
 import Router from "koa-router";
 import $ from "cafy";
-import { userNamePattern } from "@/misc/patterns";
+import { userNamePattern, objectIdPattern } from "@/misc/patterns";
 import { buildErrorResponse, buildResponse } from "@/server/misc/build-response";
 import { ApiError, ErrorId } from "@/server/misc/api-error";
 import { Users, PrivateUser } from "@/server/db/users";
 import { passwordVerify, passwordHash } from "@/server/misc/password";
 import { generateToken } from "@/server/misc/generate-token";
+import { User } from "@/models/user";
 
 const router = new Router();
 
@@ -81,6 +82,38 @@ router.post("/signin", async (ctx, _) => {
 	// パスワードが不一致であればエラー
 	if (!passwordVerify(password, user.hashedPassword)) {
 		throw new ApiError("Failed to authenticate", ErrorId.failedToAuthenticate);
+	}
+
+	ctx.body = buildResponse({ user });
+});
+
+router.get("/user/@:name", async (ctx, _) => {
+	const name: string = ctx.params.name;
+
+	if ($.str.match(userNamePattern).nok(name)) {
+		throw new ApiError("Invalid username", ErrorId.invalidParam);
+	}
+
+	const user = await Users.get(null, name) as User;
+
+	if (!user) {
+		throw new ApiError(`User @${name} is not Found`, ErrorId.noSuchUser);
+	}
+
+	ctx.body = buildResponse({ user });
+});
+
+router.get("/user/:id", async (ctx, _) => {
+	const id: string = ctx.params.id;
+
+	if ($.str.match(objectIdPattern).nok(id)) {
+		throw new ApiError("Invalid Id", ErrorId.invalidParam);
+	}
+
+	const user = await Users.get(id) as User;
+
+	if (!user) {
+		throw new ApiError(`User id:${id} is not found`, ErrorId.noSuchUser);
 	}
 
 	ctx.body = buildResponse({ user });

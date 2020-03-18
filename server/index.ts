@@ -29,6 +29,10 @@ app.use(async (ctx, next) => {
 		} else {
 			ctx.status = err.status || 500;
 			ctx.body = buildErrorResponse(err.message, err.status);
+			// todo: chalk を使用して書き直す
+			// eslint-disable-next-line no-console
+			console.error(`Internal Error ${err.name}: ${err.message}
+${err.stack}`);
 		}
 	}
 });

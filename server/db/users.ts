@@ -26,6 +26,7 @@ export namespace Users {
 				createdAt: true
 			}
 		});
+		if (!user) { return null; }
 
 		user.id = user._id;
 		return user as User;
