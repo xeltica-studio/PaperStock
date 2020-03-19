@@ -5,7 +5,7 @@ import Fiber from "fibers";
 const colors = require("vuetify/es5/util/colors").default;
 
 const config: Configuration = {
-	mode: "universal",
+	mode: "spa",
 	server: {
 		port: 8080
 	},
@@ -41,7 +41,8 @@ const config: Configuration = {
 	 ** Plugins to load before mounting the App
 	 */
 	plugins: [
-		"@/plugins/global-components.ts"
+		"@/plugins/global-components.ts",
+		"@/plugins/vuex-persistedstate.ts"
 	],
 	/*
 	 ** Nuxt.js dev-modules

@@ -20,7 +20,7 @@ router.get("/teapot", (ctx, _) => {
 });
 
 router.post("/signup", async (ctx, _) => {
-	const name = ctx.query.userName as string;
+	const name = ctx.query.username as string;
 	const password = ctx.query.password as string;
 
 	// ユーザー名とパスワードが正しいフォーマットかどうか検証
@@ -61,7 +61,7 @@ router.post("/signup", async (ctx, _) => {
 });
 
 router.post("/signin", async (ctx, _) => {
-	const name = ctx.query.userName as string;
+	const name = ctx.query.username as string;
 	const password = ctx.query.password as string;
 
 	// ユーザー名とパスワードが正しいフォーマットかどうか検証
