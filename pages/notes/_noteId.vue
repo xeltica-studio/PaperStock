@@ -8,12 +8,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-export default Vue.extend({
-	computed: {
-		noteId () {
-			return this.$route.params.noteId;
-		}
+import { Vue, Component } from "nuxt-property-decorator";
+
+@Component
+export default class NoteId extends Vue {
+	get noteId () {
+		return this.$route.params.noteId;
 	}
-});
+}
 </script>

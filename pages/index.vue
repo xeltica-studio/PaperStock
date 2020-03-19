@@ -37,13 +37,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-export default Vue.extend({
-	data () {
-		return {
-			pinnedNotes: [],
-			recentNotes: []
-		};
-	}
-});
+import { Vue, Component } from "nuxt-property-decorator";
+import { Note } from "@/models/note";
+
+@Component
+export default class Index extends Vue {
+	private pinnedNotes: Note[] = [];
+	private recentNotes: Note[] = [];
+}
 </script>

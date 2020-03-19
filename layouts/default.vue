@@ -75,17 +75,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { Vue, Component } from "nuxt-property-decorator";
 
-export default Vue.extend({
-	data () {
-		return {
-			drawer: null as boolean | null,
-			useMiniVariant: false
-		};
-	},
-	computed: {
-		miniVariant () { return this.useMiniVariant && this.$vuetify.breakpoint.smAndUp; }
-	}
-});
+@Component
+export default class Default extends Vue {
+	private drawer: boolean | null = null;
+	private useMiniVariant = false
+
+	get miniVariant () { return this.useMiniVariant && this.$vuetify.breakpoint.smAndUp; }
+}
 </script>

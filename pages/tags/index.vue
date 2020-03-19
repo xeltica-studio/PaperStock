@@ -10,8 +10,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-export default Vue.extend({
+import { Vue, Component } from "nuxt-property-decorator";
 
-});
+@Component
+export default class Index extends Vue {
+}
 </script>
