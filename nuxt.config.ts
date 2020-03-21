@@ -61,6 +61,11 @@ const config: Configuration = {
 		"@nuxtjs/axios",
 		"@nuxtjs/pwa"
 	],
+	router: {
+		middleware: [
+			"auth"
+		]
+	},
 	/*
 	 ** Axios module configuration
 	 ** See https://axios.nuxtjs.org/options

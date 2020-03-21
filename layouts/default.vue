@@ -10,13 +10,13 @@
 			<v-list>
 				<v-list-item class="px-2" to="/userId">
 					<v-list-item-avatar color="red">
-						<span class="white--text headline">X</span>
+						<span class="white--text headline">{{ (myself.profileName || myself.name)[0] }}</span>
 					</v-list-item-avatar>
 					<v-list-item-content v-show="!miniVariant">
 						<v-list-item-title class="title">
-							Xeltica
+							{{ myself.profileName || myself.name }}
 						</v-list-item-title>
-						<v-list-item-subtitle>開発部</v-list-item-subtitle>
+						<v-list-item-subtitle>{{ myself.role || "肩書きなし" }}</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
 				<v-divider />
@@ -76,11 +76,14 @@
 
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
+import { AuthStore } from "@/store";
 
 @Component
 export default class Default extends Vue {
 	private drawer: boolean | null = null;
 	private useMiniVariant = false
+
+	get myself () { return AuthStore.myself; }
 
 	get miniVariant () { return this.useMiniVariant && this.$vuetify.breakpoint.smAndUp; }
 }

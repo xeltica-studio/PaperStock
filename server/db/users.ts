@@ -29,6 +29,7 @@ export namespace Users {
 		if (!user) { return null; }
 
 		user.id = user._id;
+		delete user._id;
 		return user as User;
 	};
 }

@@ -3,28 +3,35 @@
 		<ps-create-note-button />
 		<v-flex>
 			<v-list two-line>
-				<h1 class="title">
-					ピン留めされたノート
-				</h1>
-				<v-alert v-if="pinnedNotes.length === 0" outlined color="error">
-					ピン留めされたノートはまだありません。
-				</v-alert>
+				<v-list-item>
+					<h1 class="title">
+						ピン留めされたノート
+					</h1>
+				</v-list-item>
+				<v-list-item>
+					<v-alert v-if="pinnedNotes.length === 0" outlined color="error">
+						ピン留めされたノートはまだありません。
+					</v-alert>
+				</v-list-item>
 				<v-list-item v-for="note in pinnedNotes" :key="note.id">
 					<v-list-item-content>
 						<v-list-item-title v-text="note.title" />
 						<v-list-item-subtitle v-text="note.group.name" />
 					</v-list-item-content>
 				</v-list-item>
-
-				<h1 class="title">
-					最新のノート
-				</h1>
-				<v-alert v-if="pinnedNotes.length === 0" outlined color="error">
-					まだノートがありません。
-					<nuxt-link to="/notes/new">
-						初めてのノートを書きませんか？
-					</nuxt-link>
-				</v-alert>
+				<v-list-item>
+					<h1 class="title">
+						最新のノート
+					</h1>
+				</v-list-item>
+				<v-list-item>
+					<v-alert v-if="pinnedNotes.length === 0" outlined color="error">
+						まだノートがありません。
+						<nuxt-link to="/notes/new">
+							初めてのノートを書きませんか？
+						</nuxt-link>
+					</v-alert>
+				</v-list-item>
 				<v-list-item v-for="note in recentNotes" :key="note.id">
 					<v-list-item-content>
 						<v-list-item-title v-text="note.title" />

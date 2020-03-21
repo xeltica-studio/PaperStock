@@ -1,5 +1,6 @@
 import Koa from "koa";
 import Router from "koa-router";
+import cors from "koa-cors";
 import consola from "consola";
 import chokidar from "chokidar";
 import esm from "esm";
@@ -14,6 +15,11 @@ const app = new Koa();
 const router = new Router();
 config.dev = app.env !== "production";
 
+// Configure CORS
+app.use(cors({
+	origin: "*"
+}));
+
 // Error Handling
 app.use(async (ctx, next) => {
 	try {
@@ -25,7 +31,7 @@ app.use(async (ctx, next) => {
 	} catch (err) {
 		if (err instanceof ApiError) {
 			ctx.status = 401;
-			ctx.body = buildErrorResponse(err.message, 401, err.errorId);
+			ctx.body = buildErrorResponse(err.message, 400, err.errorId);
 		} else {
 			ctx.status = err.status || 500;
 			ctx.body = buildErrorResponse(err.message, err.status);

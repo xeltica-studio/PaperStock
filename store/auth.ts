@@ -9,31 +9,42 @@ import { API } from "@/utils/api";
 })
 export default class Auth extends VuexModule {
 	private _myself: User | null = null;
+	private _token: string | null = null;
 
 	public get myself () { return this._myself; }
+	public get token () { return this._token; }
 
 	@Mutation
-	public setMyself (user: User) { this._myself = user; }
+	public signOut () {
+		this._token = null;
+		this._myself = null;
+	}
+
+	@Mutation
+	private setResponse (res: any) {
+		this._myself = res.user;
+		this._token = res.token;
+	}
 
 	@Action
 	public async signInAsync ({ username, password }: { username: string, password: string }) {
-		const res = (await API.$post("/v1/signin", {
+		const res = (await API.$post("/v1/signin", null, {
 			params: { username, password }
 		})).data;
 
 		if (res.ok) {
-			this.setMyself(res.user);
+			this.setResponse(res);
 		}
 	}
 
 	@Action
 	public async signUpAsync ({ username, password }: { username: string, password: string }) {
-		const res = (await API.$post("/v1/signup", {
+		const res = (await API.$post("/v1/signup", null, {
 			params: { username, password }
 		})).data;
 
 		if (res.ok) {
-			this.setMyself(res.user);
+			this.setResponse(res);
 		}
 	}
 }

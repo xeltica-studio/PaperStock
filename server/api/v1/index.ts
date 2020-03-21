@@ -56,7 +56,8 @@ router.post("/signup", async (ctx, _) => {
 	await Users.collection.insert(user);
 
 	ctx.body = buildResponse({
-		user: Users.get(null, name)
+		user: await Users.get(null, name),
+		token
 	});
 });
 
@@ -72,19 +73,21 @@ router.post("/signin", async (ctx, _) => {
 		throw new ApiError("Invalid password", ErrorId.invalidParam);
 	}
 
-	const user = await Users.get(null, name, true) as PrivateUser;
+	const user = await Users.get(null, name);
 
 	// ユーザーが存在しなければエラー
 	if (!user) {
 		throw new ApiError("No such user", ErrorId.noSuchUser);
 	}
 
+	const { hashedPassword, token } = (await Users.get(null, name, true) as PrivateUser);
+
 	// パスワードが不一致であればエラー
-	if (!passwordVerify(password, user.hashedPassword)) {
+	if (!passwordVerify(password, hashedPassword)) {
 		throw new ApiError("Failed to authenticate", ErrorId.failedToAuthenticate);
 	}
 
-	ctx.body = buildResponse({ user });
+	ctx.body = buildResponse({ user, token });
 });
 
 router.get("/user/@:name", async (ctx, _) => {
