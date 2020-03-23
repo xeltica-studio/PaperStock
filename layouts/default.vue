@@ -8,7 +8,7 @@
 			app
 		>
 			<v-list>
-				<v-list-item class="px-2" to="/userId">
+				<v-list-item class="px-2" :to="`/users/${myself.name}`">
 					<v-list-item-avatar color="red">
 						<span class="white--text headline">{{ (myself.profileName || myself.name)[0] }}</span>
 					</v-list-item-avatar>

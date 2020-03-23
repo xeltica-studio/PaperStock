@@ -9,4 +9,5 @@ export interface User {
     iconUrl: string;
     headerUrl: string;
     createdAt: Date;
+    notesCount: number;
 }
