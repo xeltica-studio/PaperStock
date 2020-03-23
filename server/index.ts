@@ -30,7 +30,7 @@ app.use(async (ctx, next) => {
 		}
 	} catch (err) {
 		if (err instanceof ApiError) {
-			ctx.status = 401;
+			ctx.status = 400;
 			ctx.body = buildErrorResponse(err.message, 400, err.errorId);
 		} else {
 			ctx.status = err.status || 500;

@@ -1,28 +1,25 @@
 import axios, { AxiosRequestConfig } from "axios";
 import serverSetting from "@/server-setting";
 
+const $ = axios.create({
+	baseURL: serverSetting.apiServer,
+	validateStatus: s => s < 500
+});
+
 export namespace API {
-	export const $get = (path: string, config: AxiosRequestConfig) => {
-		// todo vuex を設定し次第、トークンがあればセットするようにする
-		const url = serverSetting.apiServer + path;
-		return axios.get(url, config);
+	export const $get = (path: string, config?: AxiosRequestConfig) => {
+		return $.get(path, config);
 	};
 
 	export const $post = (path: string, data?: any, config?: AxiosRequestConfig) => {
-		// todo vuex を設定し次第、トークンがあればセットするようにする
-		const url = serverSetting.apiServer + path;
-		return axios.post(url, data, config);
+		return $.post(path, data, config);
 	};
 
 	export const $put = (path: string, data?: any, config?: AxiosRequestConfig) => {
-		// todo vuex を設定し次第、トークンがあればセットするようにする
-		const url = serverSetting.apiServer + path;
-		return axios.put(url, data, config);
+		return $.put(path, data, config);
 	};
 
-	export const $delete = (path: string, config: AxiosRequestConfig) => {
-		// todo vuex を設定し次第、トークンがあればセットするようにする
-		const url = serverSetting.apiServer + path;
-		return axios.delete(url, config);
+	export const $delete = (path: string, config?: AxiosRequestConfig) => {
+		return $.delete(path, config);
 	};
 }

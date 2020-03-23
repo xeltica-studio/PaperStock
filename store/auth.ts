@@ -26,7 +26,7 @@ export default class Auth extends VuexModule {
 		this._token = res.token;
 	}
 
-	@Action
+	@Action({ rawError: true })
 	public async signInAsync ({ username, password }: { username: string, password: string }) {
 		const res = (await API.$post("/v1/signin", null, {
 			params: { username, password }
@@ -37,7 +37,7 @@ export default class Auth extends VuexModule {
 		}
 	}
 
-	@Action
+	@Action({ rawError: true })
 	public async signUpAsync ({ username, password }: { username: string, password: string }) {
 		const res = (await API.$post("/v1/signup", null, {
 			params: { username, password }
