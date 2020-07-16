@@ -1,0 +1,2 @@
+#!/bin/sh
+npx ts-node -r tsconfig-paths/register --project ./server/tsconfig.json $(npm bin)/typeorm migration:generate -n $1

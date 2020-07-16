@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import { User } from "@/models/user";
+import { User } from "@/models/entities/user";
 import { API } from "@/utils/api";
 
 @Module({

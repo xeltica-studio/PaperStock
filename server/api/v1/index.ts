@@ -3,10 +3,12 @@ import $ from "cafy";
 import { userNamePattern, objectIdPattern } from "@/misc/patterns";
 import { buildErrorResponse, buildResponse } from "@/server/misc/build-response";
 import { ApiError, ErrorId } from "@/server/misc/api-error";
-import { Users, PrivateUser } from "@/server/db/users";
 import { passwordVerify, passwordHash } from "@/server/misc/password";
 import { generateToken } from "@/server/misc/generate-token";
-import { User } from "@/models/user";
+import { User } from "@/models/entities/user";
+import { Users } from "@/models";
+import { generateId } from "@/misc/generate-id";
+import { ensure } from "@/misc/ensure";
 
 const router = new Router();
 
@@ -32,14 +34,15 @@ router.post("/signup", async (ctx, _) => {
 	}
 
 	// ユーザーが既に存在していればエラー
-	if (await Users.get(null, name)) {
+	if (await Users.findOne({ name })) {
 		throw new ApiError("Already exists", ErrorId.duplicated);
 	}
 
 	const hashedPassword = passwordHash(password, 16);
 	const token = generateToken();
 
-	const user = {
+	const user = await Users.save({
+		id: generateId(),
 		profileName: "",
 		description: "",
 		role: "",
@@ -51,12 +54,12 @@ router.post("/signup", async (ctx, _) => {
 		name,
 		hashedPassword,
 		token
-	};
+	});
 
-	await Users.collection.insert(user);
+	const packed = await Users.pack(user, user).then(ensure);
 
 	ctx.body = buildResponse({
-		user: await Users.get(null, name),
+		user: packed,
 		token
 	});
 });
@@ -73,21 +76,24 @@ router.post("/signin", async (ctx, _) => {
 		throw new ApiError("Invalid password", ErrorId.invalidParam);
 	}
 
-	const user = await Users.get(null, name);
+	const user = await Users.findOne({ name });
 
 	// ユーザーが存在しなければエラー
 	if (!user) {
 		throw new ApiError("No such user", ErrorId.noSuchUser);
 	}
 
-	const { hashedPassword, token } = (await Users.get(null, name, true) as PrivateUser);
+	const { hashedPassword, token } = user;
 
 	// パスワードが不一致であればエラー
 	if (!passwordVerify(password, hashedPassword)) {
 		throw new ApiError("Failed to authenticate", ErrorId.failedToAuthenticate);
 	}
 
-	ctx.body = buildResponse({ user, token });
+	ctx.body = buildResponse({
+		user: await Users.pack(user),
+		token
+	});
 });
 
 router.get("/user/@:name", async (ctx, _) => {
@@ -97,13 +103,13 @@ router.get("/user/@:name", async (ctx, _) => {
 		throw new ApiError("Invalid username", ErrorId.invalidParam);
 	}
 
-	const user = await Users.get(null, name) as User;
+	const user = await Users.findOne({ name }) as User;
 
 	if (!user) {
 		throw new ApiError(`User @${name} is not Found`, ErrorId.noSuchUser);
 	}
 
-	ctx.body = buildResponse({ user });
+	ctx.body = buildResponse({ user: await Users.pack(user) });
 });
 
 router.get("/user/:id", async (ctx, _) => {
@@ -113,13 +119,13 @@ router.get("/user/:id", async (ctx, _) => {
 		throw new ApiError("Invalid Id", ErrorId.invalidParam);
 	}
 
-	const user = await Users.get(id) as User;
+	const user = await Users.findOne(id) as User;
 
 	if (!user) {
 		throw new ApiError(`User id:${id} is not found`, ErrorId.noSuchUser);
 	}
 
-	ctx.body = buildResponse({ user });
+	ctx.body = buildResponse({ user: await Users.pack(user) });
 });
 
 export default router.routes();
