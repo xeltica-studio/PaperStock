@@ -1,36 +1,15 @@
-// tsconfig.json
 {
-		"compilerOptions": {
-			"target": "es2018",
-			"module": "esnext",
-			"moduleResolution": "node",
-			"lib": [
-				"esnext",
-				"esnext.asynciterable",
-				"dom"
-			],
-			"esModuleInterop": true,
-			"allowJs": true,
-			"noImplicitAny": false,
-			"experimentalDecorators": true,
-			"sourceMap": true,
-			"strict": true,
-			"strictPropertyInitialization": false,
-			"noEmit": true,
-			"baseUrl": ".",
-			"paths": {
-				"@/*": [
-					"./*"
-				]
-			},
-			"types": [
-				"@types/node",
-				"@nuxt/types",
-				"vuetify"
-			]
-		},
-		"exclude": [
-			"node_modules",
-			"server",
-		]
-	}
+   "compilerOptions": {
+      "lib": [
+         "es5",
+         "es6"
+      ],
+      "target": "es5",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "outDir": "./build",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "sourceMap": true
+   }
+}

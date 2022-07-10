@@ -1,6 +1,6 @@
 import { getConnection, createConnection, Connection } from "typeorm";
+import { entities } from "../models/entities";
 import serverSetting from "@/server-setting";
-import { entities } from "@/models/entities";
 
 const { host, port, user: username, pass: password, name: database, extra } = serverSetting.db;
 

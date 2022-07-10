@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from "typeorm";
 import { User } from "../entities/user";
-import { ClassOrId } from "../../misc/class-or-id";
+import { ClassOrId } from "../../../misc/class-or-id";
 import { ensure } from "@/misc/ensure";
 
 export type PackedUser = {

@@ -1,2 +1,8 @@
 #!/bin/sh
-npx ts-node -r tsconfig-paths/register --project ./server/tsconfig.json $(npm bin)/typeorm migration:generate -n $1
+
+if [ $# -ne 1 ]; then
+	echo "usage: $0 <migration-name>"
+	exit -1
+fi
+
+npx ts-node  -r tsconfig-paths/register --project ./tsconfig.migration.json ./node_modules/typeorm/cli.js migration:generate -n $1

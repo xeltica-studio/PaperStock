@@ -1,12 +1,12 @@
 import Router from "koa-router";
 import $ from "cafy";
+import { User } from "../../models/entities/user";
+import { Users } from "../../models";
 import { userNamePattern, objectIdPattern } from "@/misc/patterns";
 import { buildErrorResponse, buildResponse } from "@/server/misc/build-response";
 import { ApiError, ErrorId } from "@/server/misc/api-error";
 import { passwordVerify, passwordHash } from "@/server/misc/password";
 import { generateToken } from "@/server/misc/generate-token";
-import { User } from "@/models/entities/user";
-import { Users } from "@/models";
 import { generateId } from "@/misc/generate-id";
 import { ensure } from "@/misc/ensure";
 

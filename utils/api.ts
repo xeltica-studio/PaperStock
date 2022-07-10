@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import serverSetting from "@/server-setting";
+import serverSetting from "../server/models/repositories/node_modules/@/server-setting";
 
 const $ = axios.create({
 	baseURL: serverSetting.apiServer,

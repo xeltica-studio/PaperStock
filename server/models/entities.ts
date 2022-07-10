@@ -1,6 +1,6 @@
 // import { Group } from "./group";
-import { Note } from "./note";
-import { User } from "./user";
+import { Note } from "./entities/note";
+import { User } from "./entities/user";
 
 export const entities = [
 	// Group,

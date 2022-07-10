@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from "typeorm";
 import { Note } from "../entities/note";
 import { User } from "../entities/user";
-import { ClassOrId } from "../../misc/class-or-id";
+import { ClassOrId } from "../../../misc/class-or-id";
 import { ensure } from "@/misc/ensure";
 import serverSetting from "@/server-setting";
 
