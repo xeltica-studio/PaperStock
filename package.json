@@ -36,7 +36,7 @@
       "koa": "^2.11.0",
       "koa-cors": "^0.0.16",
       "koa-router": "^8.0.8",
-      "markdown-it": "^10.0.0",
+      "markdown-it": "^12.3.2",
       "markdown-it-emoji": "^1.4.0",
       "markdown-it-imsize": "^2.0.1",
       "markdown-it-sanitizer": "^0.4.3",
