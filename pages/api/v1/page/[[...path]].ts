@@ -42,8 +42,10 @@ const handler: NextApiHandler = async (req, res) => {
       if (!page || page.isDeleted) {
         returnError(res, 'PAGE_NOT_FOUND', 404);
       } else {
-        page.body = md.render(page.body);
-        returnResponse(res, page);
+        returnResponse(res, {
+          ...page,
+          html: md.render(page.body),
+        });
       }
       break;
     }

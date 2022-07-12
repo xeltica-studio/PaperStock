@@ -1,3 +1,5 @@
+import { Page } from "@prisma/client";
+
 export type ApiErrorCode = 
   | 'SYSTEM_PAGE'         // システムページである
   | 'TOKEN_REQUIRED'      // トークンが必須である
@@ -23,3 +25,7 @@ export type ApiErrorObject = {
 }
 
 export type ApiObject = ApiErrorObject | ApiResponseObject;
+
+export interface ApiPage extends Page {
+  html: string;
+};

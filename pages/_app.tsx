@@ -4,6 +4,7 @@ import { createGlobalStyle } from 'styled-components';
 import { GlobalStyle } from '../global-style';
 
 import 'xeltica-ui/dist/css/xeltica-ui.min.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

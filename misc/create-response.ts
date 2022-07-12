@@ -14,4 +14,5 @@ export const returnResponse = (res: NextApiResponse, response: any) => {
 
 export const returnEmpty = (res: NextApiResponse) => {
   res.status(204);
+  res.json(createResponse(undefined));
 };

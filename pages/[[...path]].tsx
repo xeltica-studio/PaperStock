@@ -4,12 +4,12 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { Command, NavBar } from '../components/NavBar';
 import { AppRoot } from '../components/AppRoot';
-import { ApiErrorCode, ApiObject } from '../types/api-object';
+import { ApiErrorCode, ApiObject, ApiPage } from '../types/api-object';
+import { PATH_INDEX, PATH_SYSTEM } from '../const';
 
 export type MainProp = {
   error: false,
-  title: string;
-  body: string;
+  page: ApiPage,
 } | {
   error: true,
   errorType: ApiErrorCode,
@@ -18,7 +18,6 @@ export type MainProp = {
 
 const Main = styled.div`
   display: flex;
-  gap: var(--margin);
 `;
 
 const Sidebar = styled.nav`
@@ -27,6 +26,8 @@ const Sidebar = styled.nav`
 
 const Content = styled.main`
   flex: 1;
+  background: var(--panel);
+  min-height: calc(100vh - 64px);
 `;
 
 const Article = styled.article`
@@ -40,39 +41,48 @@ const Article = styled.article`
 
 export const WikiPage: React.FC<MainProp> = (prop) => {
   const router = useRouter();
+  const p = router.query.path;
+  const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
   const body = prop.error ? (
     <>
-      <h2>エラー</h2>
+      <header className="mb-2">
+        <h1 className="title text-200">エラー</h1>
+      </header>
       <p>{prop.errorType}</p>
       {prop.errorType === 'PAGE_NOT_FOUND' ? (
-        <Link href={`/s/new?name=${encodeURIComponent(router.asPath)}`}>新規作成する</Link>
+        <Link href={`/s/edit?path=${encodeURIComponent(path)}`}>新規作成する</Link>
       ) : (
         <Link href="/">トップページに戻る</Link>
       )}
     </>
   ) : (
     <>
-      <h1 className="title">{prop.title}</h1>
-      <section dangerouslySetInnerHTML={{__html: prop.body}} />
+      <header className="mb-2">
+        <h1 className="title text-200">{prop.page.title}</h1>
+      </header>
+      <section dangerouslySetInnerHTML={{__html: prop.page.html}} />
     </>
   );
 
   return (
-    <AppRoot className="container" title="PaperStock" titleHref="/" rightCommands={[
-      {type: 'link', href: `/s/edit?path=${encodeURIComponent(router.asPath)}`, label: 'ページを編集する' }
+    <AppRoot title="PaperStock" titleHref="/" rightCommands={[
+      {type: 'link', href: `/s/edit?path=${encodeURIComponent(path)}`, label: '編集', iconClass: 'fas fa-pen-to-square' },
+      {type: 'button', iconClass: 'fas fa-ellipsis-h' },
     ]}>
       <Main>
-        <Sidebar>
+        <Sidebar className="pa-1">
           <div className="menu">
             <Link href="/walkthrough"><div className="item">歩き方</div></Link>
             <Link href="/discord"><div className="item">公式Discord</div></Link>
             <Link href="/faq"><div className="item">よくある質問</div></Link>
             <Link href="/vote"><div className="item">投票</div></Link>
           </div>
-          <Link href="/s/new"><a className="btn primary mt-2">新規作成</a></Link>
+          <Link href="/s/new">
+            <a className="btn primary mt-2"><i className="fas fa-plus fa-fw" /> 新規作成</a>
+          </Link>
         </Sidebar>
-        <Content>
-          <Article className="card px-4 py-2 shadow-2">
+        <Content className="container">
+          <Article>
             {body}
           </Article>
           <footer className="text-75 text-dimmed mt-5">
@@ -87,8 +97,10 @@ export const WikiPage: React.FC<MainProp> = (prop) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({req, res, resolvedUrl}) => {
-  if (resolvedUrl.startsWith('/s/') || resolvedUrl === '/s') {
+export const getServerSideProps: GetServerSideProps = async ({query}) => {
+  const p = query.path;
+  const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
+  if (path.startsWith(PATH_SYSTEM) || path === PATH_SYSTEM) {
     return {
       props: {
         error: true,
@@ -96,7 +108,7 @@ export const getServerSideProps: GetServerSideProps = async ({req, res, resolved
       } as MainProp,
     };
   }
-  const data = (await fetch('http://localhost:3000/api/v1/page' + resolvedUrl).then(d => d.json())) as ApiObject;
+  const data = (await fetch('http://localhost:3000/api/v1/page/' + path).then(d => d.json())) as ApiObject;
   return !data.ok ? {
     props: {
       error: true,
@@ -105,7 +117,7 @@ export const getServerSideProps: GetServerSideProps = async ({req, res, resolved
   } : {
     props: {
       error: false,
-      ...data.response
+      page: data.response
     }
   };
 };
