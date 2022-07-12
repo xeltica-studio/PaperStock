@@ -1,10 +1,13 @@
 export type ApiErrorCode = 
-  | 'SYSTEM_PAGE'     // システムページである
-  | 'TOKEN_REQUIRED'  // トークンが必須である
-  | 'TOKEN_EXPIRED'   // トークンが期限切れである
-  | 'PAGE_NOT_FOUND'  // ページが存在しない
-  | 'INTERNAL_ERROR'  // 内部エラー
-  | 'INVALID_METHOD'  // メソッドが不正である
+  | 'SYSTEM_PAGE'         // システムページである
+  | 'TOKEN_REQUIRED'      // トークンが必須である
+  | 'TOKEN_EXPIRED'       // トークンが期限切れである
+  | 'PAGE_NOT_FOUND'      // ページが存在しない
+  | 'PAGE_ALREADY_EXISTS' // ページが既に存在する
+  | 'INTERNAL_ERROR'      // 内部エラー
+  | 'INVALID_METHOD'      // メソッドが不正である
+  | 'PERMISSION_DENIED'   // 権限が無い
+  | 'INVALID_PARAMS'      // 引数がおかしい
   ;
 
 export type ApiResponseObject = {

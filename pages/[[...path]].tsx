@@ -34,10 +34,7 @@ const Article = styled.article`
     font-size: 2rem;
   }
   h1.title {
-    font-weight: bold;
     width: 100%;
-    border-bottom: 1px solid var(--dimmed);
-    margin-bottom: 1.5rem;
   }
 `;
 
@@ -99,7 +96,7 @@ export const getServerSideProps: GetServerSideProps = async ({req, res, resolved
       } as MainProp,
     };
   }
-  const data = (await fetch('http://localhost:3000/api/v1/page').then(d => d.json())) as ApiObject;
+  const data = (await fetch('http://localhost:3000/api/v1/page' + resolvedUrl).then(d => d.json())) as ApiObject;
   return !data.ok ? {
     props: {
       error: true,

@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ユーザー
+model User {
+  // ID
+  id String @id @default(cuid())
+  // 作成日時
+  createdAt DateTime @default(now())
+  // 名前
+  name String?
+  // ロール
+  role Role @default(USER)
+
+  // 削除フラグ
+  isDeleted Boolean @default(false)
+
+  // 執筆した記事
+  authoredPages Page[] @relation("author")
+
+  // 最終更新した記事
+  updatedPages Page[] @relation("updatedUser")
+
+  // 過去に更新した記事
+  previousUpdatedPages PageHistory[]
+
+  @@index([name])
+}
+
+// 記事
+model Page {
+  // ID
+  id String @id @default(cuid())
+  // 作成日時
+  createdAt DateTime @default(now())
+  // 更新日時
+  updatedAt DateTime @default(now())
+  // パス
+  path String @unique
+  // タイトル
+  title String
+  // 本文
+  body String
+  // 作成者
+  author User? @relation("author", fields: [authorId], references: [id], onDelete: SetNull)
+  // 作成者のID
+  authorId String?
+
+  // 更新者
+  updatedUser User? @relation("updatedUser", fields: [updatedUserId], references: [id], onDelete: SetNull)
+  // 更新者のID
+  updatedUserId String?
+
+  // 削除フラグ
+  isDeleted Boolean @default(false)
+
+  // ページ更新履歴
+  histories PageHistory[]
+
+  @@index([path, title])
+}
+
+model PageHistory {
+  // ID
+  id String @id @default(cuid())
+  // 作成日時
+  createdAt DateTime @default(now())
+  // 記事
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  // 記事ID
+  pageId String
+  // 更新者
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  // 更新者のID
+  userId String?
+}
+
+// ロール
+enum Role {
+  USER
+  ADMIN
+}
