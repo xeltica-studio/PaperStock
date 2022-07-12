@@ -1,6 +1,11 @@
 {
   "name": "paperstock",
   "version": "0.1.0",
+  "author": {
+    "name": "Xeltica Studio",
+    "email": "xeltica@gmail.com",
+    "url": "https://xeltica.work"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
