@@ -1,4 +1,4 @@
-import { ApiObject } from "../types/api-object";
+import { ApiObject } from "@/models/api/object";
 
 export const $post = async (endpoint: string, args: any) => {
   const e = await fetch(`/api/v1/${endpoint}`, {

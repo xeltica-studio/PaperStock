@@ -1,10 +1,11 @@
 import MarkdownIt from "markdown-it";
 import { NextApiHandler } from "next";
 import { is, object, optional, string } from "superstruct";
-import { PATH_INDEX, PATH_SYSTEM } from "../../../../const";
-import { prisma } from "../../../../libs/prisma";
-import { returnError } from "../../../../misc/create-error-object";
-import { returnEmpty, returnResponse } from "../../../../misc/create-response";
+
+import { PATH_INDEX, PATH_SYSTEM } from "@/const";
+import { prisma } from "@/libs/prisma";
+import { returnError } from "@/misc/create-error-object";
+import { returnEmpty, returnResponse } from "@/misc/create-response";
 
 const md = MarkdownIt();
 

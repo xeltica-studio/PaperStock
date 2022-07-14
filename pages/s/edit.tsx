@@ -2,11 +2,12 @@ import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import styled from "styled-components";
-import { AppRoot } from "../../components/AppRoot";
-import { Command, NavBar } from "../../components/NavBar";
-import { PATH_INDEX } from "../../const";
-import { $post, $put } from "../../misc/call-api";
-import { ApiObject } from "../../types/api-object";
+
+import { AppRoot } from "@/components/AppRoot";
+import { CommonHead } from "@/components/CommonHead";
+import { PATH_INDEX } from "@/const";
+import { $post, $put } from "@/misc/call-api";
+import { ApiObject } from "@/models/api/object";
 
 const Editor = styled.textarea`
   max-width: 100%;
@@ -37,8 +38,13 @@ const EditPage: NextPage<EditPageProp> = ({initialTitle, initialBody, isNewPage}
     });
   };
 
+  const pageTitle = isNewPage ? 'ページの新規作成' : 'ページの編集';
+
   return (
-    <AppRoot title={isNewPage ? 'ページの新規作成' : 'ページの編集'} onBackButton={() => router.back()}>
+    <AppRoot title={pageTitle} onBackButton={() => router.back()}>
+      <CommonHead>
+        <title>{pageTitle} - PaperStock</title>
+      </CommonHead>
       <div className="container vstack">
         <div className="hstack slim">
           <div className="hgroup">

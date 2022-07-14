@@ -1,8 +1,8 @@
 import { NextApiResponse } from 'next';
 
-import { ApiResponseObject } from "../types/api-object";
+import { ApiObject } from '@/models/api/object';
 
-export const createResponse = (response: any): ApiResponseObject => ({
+export const createResponse = (response: any): ApiObject => ({
   ok: true,
   response,
 });

@@ -1,7 +1,6 @@
 import type { AppProps } from 'next/app';
-import { createGlobalStyle } from 'styled-components';
 
-import { GlobalStyle } from '../global-style';
+import { GlobalStyle } from '@/global-style';
 
 import 'xeltica-ui/dist/css/xeltica-ui.min.css';
 import '@fortawesome/fontawesome-free/css/all.css';

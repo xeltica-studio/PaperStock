@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styled from "styled-components";
-import { FC } from "../misc/FC";
+
+import { FC } from "@/misc/FC";
 
 const StyledHeader = styled.header`
   position: fixed;

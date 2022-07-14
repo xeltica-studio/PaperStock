@@ -17,21 +17,24 @@ model User {
   // 作成日時
   createdAt DateTime @default(now())
   // 名前
-  name String?
+  name String? @db.VarChar(128)
   // ロール
-  role Role @default(USER)
-
+  role Role @default(user)
   // 削除フラグ
   isDeleted Boolean @default(false)
+  // パスワードのハッシュ
+  hashedPassword String
+  // APIアクセストークン
+  accessToken String
 
   // 執筆した記事
   authoredPages Page[] @relation("author")
-
   // 最終更新した記事
   updatedPages Page[] @relation("updatedUser")
-
   // 過去に更新した記事
   previousUpdatedPages PageHistory[]
+  // リアクション一覧
+  reactions PageReaction[]
 
   @@index([name])
 }
@@ -43,30 +46,54 @@ model Page {
   // 作成日時
   createdAt DateTime @default(now())
   // 更新日時
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   // パス
-  path String @unique
+  path String @unique @db.VarChar(128)
   // タイトル
-  title String
+  title String @db.VarChar(128)
   // 本文
-  body String
+  body String @db.Text
   // 作成者
   author User? @relation("author", fields: [authorId], references: [id], onDelete: SetNull)
   // 作成者のID
   authorId String?
-
+  // アイコン形式
+  iconType IconType @default(none)
+  // アイコンのURL、絵文字、またはFont Awesome クラス
+  icon String?
   // 更新者
   updatedUser User? @relation("updatedUser", fields: [updatedUserId], references: [id], onDelete: SetNull)
   // 更新者のID
   updatedUserId String?
-
   // 削除フラグ
   isDeleted Boolean @default(false)
+  // 更新権限
+  writePermission Permisson @default(everyone)
 
   // ページ更新履歴
   histories PageHistory[]
+  // リアクション一覧
+  reactions PageReaction[]
 
   @@index([path, title])
+}
+
+// ページリアクション
+model PageReaction {
+  // ID
+  id String @id @default(cuid())
+  // 作成日時
+  createdAt DateTime @default(now())
+  // ページ
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  // ページID
+  pageId String
+  // リアクション絵文字
+  emoji String
+  // リアクションした人
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  // リアクションした人のID
+  userId String?
 }
 
 model PageHistory {
@@ -84,8 +111,50 @@ model PageHistory {
   userId String?
 }
 
+model ServerSetting {
+  // ID
+  id String @id @default(cuid())
+  // サーバー名
+  serverName String? @db.VarChar(128)
+  // サーバー管理者名
+  ownerName String? @db.VarChar(128)
+  // サーバーアイコンURL
+  serverIconUrl String?
+  // ログイン必須にするかどうか
+  isUserOnly Boolean @default(false)
+  // 会員登録を許可するかどうか
+  canRegister Boolean @default(false)
+  // サイドバーメニュー設定
+  sidebarMenu Json @default("[]") @db.JsonB
+}
+
 // ロール
 enum Role {
-  USER
-  ADMIN
+  // 一般ユーザー
+  user
+  // 管理者
+  admin
+  // モデレーター
+  moderator
+}
+
+// アイコン形式
+enum IconType {
+  // なし
+  none
+  // Unicode 絵文字
+  unicodeEmoji
+  // Font Awesome
+  fontAwesome
+  // 画像URL
+  imageUrl
+}
+
+enum Permisson {
+  // 全員
+  everyone
+  // モデレーターのみ
+  moderator
+  // 管理者のみ
+  admin
 }

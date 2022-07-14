@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { FC } from "../misc/FC";
+import { FC } from "@/misc/FC";
 import { NavBar, NavBarProp } from "./NavBar";
 
 export const RootStyle = styled.div`

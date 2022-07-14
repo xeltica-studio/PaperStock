@@ -2,18 +2,19 @@ import type { GetServerSideProps } from 'next'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { Command, NavBar } from '../components/NavBar';
-import { AppRoot } from '../components/AppRoot';
-import { ApiErrorCode, ApiObject, ApiPage } from '../types/api-object';
-import { PATH_INDEX, PATH_SYSTEM } from '../const';
 
-export type MainProp = {
-  error: false,
-  page: ApiPage,
-} | {
-  error: true,
-  errorType: ApiErrorCode,
-  body: string,
+import { AppRoot } from '@/components/AppRoot';
+import { PATH_INDEX } from '@/const';
+import { CommonHead } from '@/components/CommonHead';
+import { ApiPage } from '@/models/api/page';
+import { ApiPageListItem } from '@/models/api/page-list-item';
+import { ApiErrorObject, ApiObject } from '@/models/api/object';
+
+export type WikiPageProp = {
+  page: ApiPage | null;
+  list: ApiPageListItem[];
+  error: ApiErrorObject | null;
+  isPageNotFound: boolean;
 };
 
 const Main = styled.div`
@@ -39,17 +40,18 @@ const Article = styled.article`
   }
 `;
 
-export const WikiPage: React.FC<MainProp> = (prop) => {
+export const WikiPage: React.FC<WikiPageProp> = (prop) => {
   const router = useRouter();
   const p = router.query.path;
   const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
+
   const body = prop.error ? (
     <>
       <header className="mb-2">
         <h1 className="title text-200">エラー</h1>
       </header>
-      <p>{prop.errorType}</p>
-      {prop.errorType === 'PAGE_NOT_FOUND' ? (
+      <p>{prop.error.errorCode}</p>
+      {prop.error.errorCode === 'PAGE_NOT_FOUND' ? (
         <Link href={`/s/edit?path=${encodeURIComponent(path)}`}>新規作成する</Link>
       ) : (
         <Link href="/">トップページに戻る</Link>
@@ -58,28 +60,40 @@ export const WikiPage: React.FC<MainProp> = (prop) => {
   ) : (
     <>
       <header className="mb-2">
-        <h1 className="title text-200">{prop.page.title}</h1>
+        <h1 className="title text-200">{prop.page?.title}</h1>
       </header>
-      <section dangerouslySetInnerHTML={{__html: prop.page.html}} />
+      <section dangerouslySetInnerHTML={{__html: prop.page?.html ?? ''}} />
     </>
   );
+  
+  const onNewButtonClick = () => {
+    const path = prompt('ページ名を入力してください');
+    if (!path) return;
+    router.push('/s/edit?path=' + encodeURIComponent(path));
+  };
 
   return (
     <AppRoot title="PaperStock" titleHref="/" rightCommands={[
       {type: 'link', href: `/s/edit?path=${encodeURIComponent(path)}`, label: '編集', iconClass: 'fas fa-pen-to-square' },
       {type: 'button', iconClass: 'fas fa-ellipsis-h' },
     ]}>
+      <CommonHead>
+        <title>{prop.error ? 'エラー' : prop.page?.title} - PaperStock</title>
+      </CommonHead>
       <Main>
         <Sidebar className="pa-1">
           <div className="menu">
-            <Link href="/walkthrough"><div className="item">歩き方</div></Link>
-            <Link href="/discord"><div className="item">公式Discord</div></Link>
-            <Link href="/faq"><div className="item">よくある質問</div></Link>
-            <Link href="/vote"><div className="item">投票</div></Link>
+            {prop.list.map(l => (
+              <Link key={l.id} href={`/${l.path}`}>
+                <a className="item">
+                  <i className="icon fas fa-chevron-right" /> {l.title}
+                </a>
+              </Link>
+            ))}
           </div>
-          <Link href="/s/new">
-            <a className="btn primary mt-2"><i className="fas fa-plus fa-fw" /> 新規作成</a>
-          </Link>
+          <button className="btn primary mt-2" onClick={onNewButtonClick}>
+            <i className="fas fa-plus fa-fw" /> 新規作成
+          </button>
         </Sidebar>
         <Content className="container">
           <Article>
@@ -97,28 +111,24 @@ export const WikiPage: React.FC<MainProp> = (prop) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({query}) => {
+export const getServerSideProps: GetServerSideProps<WikiPageProp> = async ({query}) => {
   const p = query.path;
   const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
-  if (path.startsWith(PATH_SYSTEM) || path === PATH_SYSTEM) {
-    return {
-      props: {
-        error: true,
-        errorType: 'SYSTEM_PAGE'
-      } as MainProp,
-    };
-  }
-  const data = (await fetch('http://localhost:3000/api/v1/page/' + path).then(d => d.json())) as ApiObject;
-  return !data.ok ? {
+  const [page, list] = await Promise.all([
+    (await fetch('http://localhost:3000/api/v1/page/' + path).then(d => d.json())) as ApiObject,
+    (await fetch('http://localhost:3000/api/v1/page/list').then(d => d.json())) as ApiObject
+  ]);
+  if (!list.ok) throw new Error('Could not get list');
+  const isPageNotFound = !page.ok && page.statusCode === 404;
+  return {
     props: {
-      error: true,
-      errorType: data.errorCode,
-    }
-  } : {
-    props: {
-      error: false,
-      page: data.response
-    }
+      page: page.ok ? page.response : null,
+      error: !page.ok ? page : null,
+      list: list.response,
+      isPageNotFound,
+    },
+    // TODO 404を返しつつちゃんとページをレンダリングする
+    // notFound: isPageNotFound,
   };
 };
 
