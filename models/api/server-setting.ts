@@ -8,14 +8,8 @@ export type ApiServerSetting = {
 };
 
 export type ApiSidebarMenuItem = {
-  type: 'link';
-  path: string;
-  isDisabled: boolean;
-} | {
-  type: 'separator';
-} | {
-  type: 'external-link';
-  url: string;
-  icon: string;
-  isDisabled: boolean;
+  type: 'link' | 'separator' | 'external-link';
+  path?: string;
+  icon?: string;
+  isDisabled?: boolean;
 };
