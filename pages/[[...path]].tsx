@@ -13,6 +13,9 @@ import { readPage, readPages, readServerSetting } from '@/client/api';
 import { ApiError } from '@/client/http';
 import { ServerSetting } from '@prisma/client';
 import { useCallback, useState } from 'react';
+import { sanitizePath } from '@/misc/sanitize-path';
+import { isValidPath } from '@/misc/validate-path';
+import { getPathFromQuery } from '@/misc/get-path-from-query';
 
 export type WikiPageProp = {
   page: ApiPage | null;
@@ -51,8 +54,7 @@ const Drawer = styled.div`
 
 export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error, isPageNotFound}) => {
   const router = useRouter();
-  const p = router.query.path;
-  const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
+  const path = getPathFromQuery(router.query);
   const [isVisibleDrawer, setVisibleDrawer] = useState(false);
 
   const body = error ? (
@@ -79,7 +81,7 @@ export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error, isP
   const onNewButtonClick = () => {
     const path = prompt('ページ名を入力してください');
     if (!path) return;
-    router.push('/s/edit?path=' + encodeURIComponent(path));
+    router.push('/s/edit?path=' + encodeURIComponent(sanitizePath(path)));
   };
 
   const hideDrawer = useCallback(() => setVisibleDrawer(false), []);
@@ -146,8 +148,9 @@ export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error, isP
 };
 
 export const getServerSideProps: GetServerSideProps<WikiPageProp> = async ({query}) => {
-  const p = query.path;
-  const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
+  const path = getPathFromQuery(query);
+  console.log(JSON.stringify(path));
+  if (!isValidPath(path)) throw new Error('パスが正しくありません。');
   const list = await readPages();
   const server = await readServerSetting();
   const props: WikiPageProp = {

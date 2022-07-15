@@ -1,11 +1,13 @@
 import MarkdownIt from "markdown-it";
 import { NextApiHandler } from "next";
-import { Infer, is, object, optional, string, Struct } from "superstruct";
+import { Infer, is, object, optional, string } from "superstruct";
 
-import { PATH_INDEX, PATH_SYSTEM } from "@/const";
 import { prisma } from "@/libs/prisma";
 import { returnError } from "@/misc/create-error-object";
 import { returnEmpty, returnResponse } from "@/misc/create-response";
+import { sanitizePath } from "@/misc/sanitize-path";
+import { isSystemPath, isValidPath } from "@/misc/validate-path";
+import { getPathFromQuery } from "@/misc/get-path-from-query";
 
 const md = MarkdownIt();
 
@@ -25,9 +27,11 @@ export type CreatePageBody = Infer<typeof CreatePageBodyStruct>;
 export type UpdatePageBody = Infer<typeof UpdatePageBodyStruct>;
 
 const handler: NextApiHandler = async (req, res) => {
-  const p = req.query.path;
-  const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
-  if (path.startsWith(PATH_SYSTEM + '/') || path === PATH_SYSTEM) {
+  const path = sanitizePath(getPathFromQuery(req.query));
+  if (!isValidPath(path)) {
+    return returnError(res, 'INVALID_PARAMS', 400, 'Path is invalid');
+  }
+  if (isSystemPath(path)) {
     return returnError(res, 'SYSTEM_PAGE', 400);
   }
         

@@ -1,0 +1,1 @@
+export const sanitizePath = (path: string) => path.replace(/(^\/+)|(\/+$)/g, '').trim().toLowerCase();

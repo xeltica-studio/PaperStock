@@ -7,6 +7,9 @@ import { AppRoot } from "@/components/AppRoot";
 import { CommonHead } from "@/components/CommonHead";
 import { PATH_INDEX } from "@/const";
 import { createPage, readPage, updatePage } from "@/client/api";
+import { sanitizePath } from "@/misc/sanitize-path";
+import { isSystemPath, isValidPath } from "@/misc/validate-path";
+import { getPathFromQuery } from "@/misc/get-path-from-query";
 
 const Editor = styled.textarea`
   max-width: 100%;
@@ -22,22 +25,23 @@ type EditPageProp = {
 
 const EditPage: NextPage<EditPageProp> = ({initialTitle, initialBody, isNewPage}) => {
   const router = useRouter();
-  const [title, setTitle] = useState(initialTitle || router.query.path as string);
+  const [title, setTitle] = useState(initialTitle || getPathFromQuery(router.query));
   const [body, setBody] = useState(initialBody);
   const [isDisabled, setDisabled] = useState(false);
 
   const save = async () => {
+    const path = getPathFromQuery(router.query);
     setDisabled(true);
     if (isNewPage) {
-      await createPage(router.query.path as string, {
+      await createPage(path, {
         title, body
       });
     } else {
-      await updatePage(router.query.path as string, {
+      await updatePage(path, {
         title, body
       });
     }
-    router.push(`/${router.query.path}`);
+    router.push(`/${path}`);
   };
 
   const pageTitle = isNewPage ? 'ページの新規作成' : 'ページの編集';
@@ -48,36 +52,24 @@ const EditPage: NextPage<EditPageProp> = ({initialTitle, initialBody, isNewPage}
         <title>{pageTitle} - PaperStock</title>
       </CommonHead>
       <div className="container vstack">
-        <div className="hstack slim">
-          <div className="hgroup">
-            <button className="btn bg-white">H1</button>
-            <button className="btn bg-white">H2</button>
-            <button className="btn bg-white">H3</button>
-          </div>
-          <div className="hgroup">
-            <button className="btn bg-white"><i className="fas fa-bold" title="Bold" /></button>
-            <button className="btn bg-white"><i className="fas fa-italic" title="Italic" /></button>
-            <button className="btn bg-white"><i className="fas fa-underline" title="Underline" /></button>
-            <button className="btn bg-white"><i className="fas fa-strikethrough" title="Strike Out" /></button>
-          </div>
-          <div className="hgroup">
-            <button className="btn bg-white"><i className="fas fa-list-ul" title="Unordered List" /></button>
-            <button className="btn bg-white"><i className="fas fa-list-ol" title="Ordered List" /></button>
-            <button className="btn bg-white"><i className="fas fa-quote-right" title="Block Quote" /></button>
-            <button className="btn bg-white"><i className="fas fa-code" title="Code Block" /></button>
-          </div>
-        </div>
         <input type="text" className="input-field bg-white text-bold fluid" value={title} disabled={isDisabled} onChange={e => setTitle(e.target.value)} />
         <Editor className="input-field bg-white" value={body} disabled={isDisabled} onChange={e => setBody(e.target.value)} />
-        <button className="btn primary ml-auto" disabled={isDisabled} onClick={save}><i className="fas fa-check" /> 保存</button>
+        <div className="hstack ml-auto f-middle">
+          <aside className="text-dimmed">
+            <i className="fab fa-markdown" /> Markdownを使用できます。
+          </aside>
+          <button className="btn primary" disabled={isDisabled} onClick={save}><i className="fas fa-check" /> 保存</button>
+        </div>
       </div>
     </AppRoot>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async ({query}) => {
-  const p = query.path;
-  const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
+  const path = sanitizePath(getPathFromQuery(query));
+  if (!isValidPath(path)) throw new Error('パスが正しくありません。');
+  if (isSystemPath(path)) throw new Error('システムページは編集できません。');
+
   const page = await readPage(path).catch(() => null);
   if (!page) {
     return {
