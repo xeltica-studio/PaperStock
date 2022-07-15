@@ -8,13 +8,13 @@
   },
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node .backend/server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node .backend/server.js",
     "lint": "next lint",
     "gen-migrate": "prisma migrate dev --name",
-    "predev": "prisma migrate deploy",
-    "prebuild": "prisma migrate deploy"
+    "predev": "tsc server.ts --skipLibCheck --outDir .backend && prisma migrate deploy",
+    "prebuild": "tsc server.ts --skipLibCheck --outDir .backend && prisma migrate deploy"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",

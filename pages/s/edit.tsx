@@ -6,8 +6,7 @@ import styled from "styled-components";
 import { AppRoot } from "@/components/AppRoot";
 import { CommonHead } from "@/components/CommonHead";
 import { PATH_INDEX } from "@/const";
-import { $post, $put } from "@/misc/call-api";
-import { ApiObject } from "@/models/api/object";
+import { createPage, readPage, updatePage } from "@/client/api";
 
 const Editor = styled.textarea`
   max-width: 100%;
@@ -23,19 +22,22 @@ type EditPageProp = {
 
 const EditPage: NextPage<EditPageProp> = ({initialTitle, initialBody, isNewPage}) => {
   const router = useRouter();
-  const [title, setTitle] = useState(initialTitle || router.query.name);
+  const [title, setTitle] = useState(initialTitle || router.query.path as string);
   const [body, setBody] = useState(initialBody);
   const [isDisabled, setDisabled] = useState(false);
 
-  const save = () => {
+  const save = async () => {
     setDisabled(true);
-    const send = isNewPage ? $post : $put;
-    send(`page/${router.query.path}`, {
-      title,
-      body,
-    }).then(() => {
-      router.push(`/${router.query.path}`);
-    });
+    if (isNewPage) {
+      await createPage(router.query.path as string, {
+        title, body
+      });
+    } else {
+      await updatePage(router.query.path as string, {
+        title, body
+      });
+    }
+    router.push(`/${router.query.path}`);
   };
 
   const pageTitle = isNewPage ? 'ページの新規作成' : 'ページの編集';
@@ -76,8 +78,8 @@ const EditPage: NextPage<EditPageProp> = ({initialTitle, initialBody, isNewPage}
 export const getServerSideProps: GetServerSideProps = async ({query}) => {
   const p = query.path;
   const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
-  const page = (await fetch('http://localhost:3000/api/v1/page/' + path).then(e => e.json())) as ApiObject;
-  if (!page.ok) {
+  const page = await readPage(path).catch(() => null);
+  if (!page) {
     return {
       props: {
         initialTitle: '',
@@ -88,8 +90,8 @@ export const getServerSideProps: GetServerSideProps = async ({query}) => {
   } else {
     return {
       props: {
-        initialTitle: page.response.title,
-        initialBody: page.response.body,
+        initialTitle: page.title,
+        initialBody: page.body,
         isNewPage: false,
       }
     };

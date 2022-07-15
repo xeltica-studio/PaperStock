@@ -1,6 +1,6 @@
 import MarkdownIt from "markdown-it";
 import { NextApiHandler } from "next";
-import { is, object, optional, string } from "superstruct";
+import { Infer, is, object, optional, string, Struct } from "superstruct";
 
 import { PATH_INDEX, PATH_SYSTEM } from "@/const";
 import { prisma } from "@/libs/prisma";
@@ -9,16 +9,20 @@ import { returnEmpty, returnResponse } from "@/misc/create-response";
 
 const md = MarkdownIt();
 
-const PostBody = object({
+export const CreatePageBodyStruct = object({
   title: string(),
   body: string(),
 });
 
-const PutBody = object({
+export const UpdatePageBodyStruct = object({
   title: string(),
   body: string(),
   newPath: optional(string()),
 });
+
+export type CreatePageBody = Infer<typeof CreatePageBodyStruct>;
+
+export type UpdatePageBody = Infer<typeof UpdatePageBodyStruct>;
 
 const handler: NextApiHandler = async (req, res) => {
   const p = req.query.path;
@@ -52,7 +56,7 @@ const handler: NextApiHandler = async (req, res) => {
     }
     case 'POST': {
       // ページを作成する。
-      if (!is(body, PostBody)) {
+      if (!is(body, CreatePageBodyStruct)) {
         return returnError(res, 'INVALID_PARAMS', 400);
       }
       const page = await prisma.page.findUnique({
@@ -76,7 +80,7 @@ const handler: NextApiHandler = async (req, res) => {
     }
     case 'PUT': {
       // ページを更新する。
-      if (!is(body, PutBody)) {
+      if (!is(body, UpdatePageBodyStruct)) {
         return returnError(res, 'INVALID_PARAMS', 400);
       }
       const page = await prisma.page.findUnique({

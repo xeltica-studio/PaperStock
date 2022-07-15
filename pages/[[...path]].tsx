@@ -8,7 +8,9 @@ import { PATH_INDEX } from '@/const';
 import { CommonHead } from '@/components/CommonHead';
 import { ApiPage } from '@/models/api/page';
 import { ApiPageListItem } from '@/models/api/page-list-item';
-import { ApiErrorObject, ApiObject } from '@/models/api/object';
+import { ApiErrorObject } from '@/models/api/object';
+import { readPage, readPages } from '@/client/api';
+import { ApiError } from '@/client/http';
 
 export type WikiPageProp = {
   page: ApiPage | null;
@@ -114,19 +116,25 @@ export const WikiPage: React.FC<WikiPageProp> = (prop) => {
 export const getServerSideProps: GetServerSideProps<WikiPageProp> = async ({query}) => {
   const p = query.path;
   const path = typeof p === 'object' ? p[0] : p ?? PATH_INDEX;
-  const [page, list] = await Promise.all([
-    (await fetch('http://localhost:3000/api/v1/page/' + path).then(d => d.json())) as ApiObject,
-    (await fetch('http://localhost:3000/api/v1/page/list').then(d => d.json())) as ApiObject
-  ]);
-  if (!list.ok) throw new Error('Could not get list');
-  const isPageNotFound = !page.ok && page.statusCode === 404;
+  const list = await readPages();
+  const props: WikiPageProp = {
+    page: null,
+    error: null,
+    list,
+    isPageNotFound: false,
+  };
+  try {
+    props.page = await readPage(path);
+  } catch (e) {
+    if (e instanceof ApiError) {
+      props.error = e.errorObject;
+      props.isPageNotFound = e.errorObject.statusCode === 404;
+    } else {
+      throw e;
+    }
+  }
   return {
-    props: {
-      page: page.ok ? page.response : null,
-      error: !page.ok ? page : null,
-      list: list.response,
-      isPageNotFound,
-    },
+    props,
     // TODO 404を返しつつちゃんとページをレンダリングする
     // notFound: isPageNotFound,
   };
