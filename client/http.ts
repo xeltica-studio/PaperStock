@@ -1,13 +1,14 @@
+import { AnyObject } from '@/models/any-object';
 import { ApiErrorObject, ApiObject } from '@/models/api/object';
 
-export const get = async <T = any>(endpoint: string, query?: Record<string, unknown>) => {
+export const get = async <T = AnyObject>(endpoint: string, query?: Record<string, unknown>) => {
 	const q = !query ? '' : '?' + Object.entries(query).map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`).join('&');
 	return fetchAndThrow<T>(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/${endpoint}${q}`, {
 		method: 'GET',
 	});
 };
 
-export const post = async <T = any>(endpoint: string, args: Record<string, unknown> = {}) => {
+export const post = async <T = AnyObject>(endpoint: string, args: Record<string, unknown> = {}) => {
 	return fetchAndThrow<T>(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/${endpoint}`, {
 		method: 'POST',
 		body: JSON.stringify(args),
@@ -17,7 +18,7 @@ export const post = async <T = any>(endpoint: string, args: Record<string, unkno
 	});
 };
 
-export const put = async <T = any>(endpoint: string, args: Record<string, unknown> = {}) => {
+export const put = async <T = AnyObject>(endpoint: string, args: Record<string, unknown> = {}) => {
 	return fetchAndThrow<T>(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/${endpoint}`, {
 		method: 'PUT',
 		body: JSON.stringify(args),
@@ -27,7 +28,7 @@ export const put = async <T = any>(endpoint: string, args: Record<string, unknow
 	});
 };
 
-export const del = async <T = any>(endpoint: string, args: Record<string, unknown> = {}) => {
+export const del = async <T = AnyObject>(endpoint: string, args: Record<string, unknown> = {}) => {
 	return fetchAndThrow<T>(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/${endpoint}`, {
 		method: 'DELETE',
 		body: JSON.stringify(args),
