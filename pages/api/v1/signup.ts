@@ -1,7 +1,8 @@
+import { REGEX_NAME } from '@/const';
 import prisma from '@/libs/prisma';
 import { returnError } from '@/misc/create-error-object';
 import { returnResponse } from '@/misc/create-response';
-import { signupAsync, userNameRegex } from '@/services/signup';
+import { signupAsync } from '@/services/signup';
 import { NextApiHandler } from 'next';
 import { Infer, is, object, string } from 'superstruct';
 
@@ -31,7 +32,7 @@ const handler: NextApiHandler = async (req, res) => {
 		return returnError(res, 'INVALID_PARAMS', 400);
 	}
 
-	if (!userNameRegex.test(body.name)) {
+	if (!REGEX_NAME.test(body.name)) {
 		return returnError(res, 'INVALID_PARAMS', 400, 'name');
 	}
 

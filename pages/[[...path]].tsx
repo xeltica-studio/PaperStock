@@ -8,13 +8,14 @@ import { CommonHead } from '@/components/CommonHead';
 import { ApiPage } from '@/models/api/page';
 import { ApiPageListItem } from '@/models/api/page-list-item';
 import { ApiErrorObject } from '@/models/api/object';
-import { readPage, readPages, readServerSetting } from '@/client/api';
+import { readMeta, readPage, readPages, readServerSetting } from '@/client/api';
 import { ApiError } from '@/client/http';
 import { ServerSetting } from '@prisma/client';
 import { useCallback, useState } from 'react';
 import { sanitizePath } from '@/misc/sanitize-path';
 import { isValidPath } from '@/misc/validate-path';
 import { getPathFromQuery } from '@/misc/get-path-from-query';
+import { SetupPage } from '@/components/SetupPage';
 
 export type WikiPageProp = {
   page: ApiPage | null;
@@ -22,6 +23,7 @@ export type WikiPageProp = {
   server: ServerSetting;
   error: ApiErrorObject | null;
   isPageNotFound: boolean;
+  requireSetup: boolean;
 };
 
 const Main = styled.div`
@@ -51,10 +53,13 @@ const Drawer = styled.div`
   z-index: 20000;
 `;
 
-export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error}) => {
+export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error, requireSetup}) => {
 	const router = useRouter();
 	const path = getPathFromQuery(router.query);
 	const [isVisibleDrawer, setVisibleDrawer] = useState(false);
+
+	const hideDrawer = useCallback(() => setVisibleDrawer(false), []);
+	const showDrawer = useCallback(() => setVisibleDrawer(true), []);
 
 	const body = error ? (
 		<>
@@ -83,10 +88,6 @@ export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error}) =>
 		router.push('/s/edit?path=' + encodeURIComponent(sanitizePath(path)));
 	};
 
-	const hideDrawer = useCallback(() => setVisibleDrawer(false), []);
-
-	const showDrawer = useCallback(() => setVisibleDrawer(true), []);
-
 	const menuItem = (
 		<>
 			<div className="menu">
@@ -104,7 +105,7 @@ export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error}) =>
 		</>
 	);
 
-	return (
+	return requireSetup ? <SetupPage /> : (
 		<AppRoot title={server.serverName ?? ''} titleHref="/" rightCommands={[
 			{type: 'link', href: `/s/edit?path=${encodeURIComponent(path)}`, label: '編集', iconClass: 'fas fa-pen-to-square' },
 			{type: 'button', iconClass: 'fas fa-ellipsis-h' },
@@ -148,17 +149,22 @@ export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error}) =>
 
 export const getServerSideProps: GetServerSideProps<WikiPageProp> = async ({query}) => {
 	const path = getPathFromQuery(query);
-	console.log(JSON.stringify(path));
 	if (!isValidPath(path)) throw new Error('パスが正しくありません。');
 	const list = await readPages();
 	const server = await readServerSetting();
+	const meta = await readMeta();
 	const props: WikiPageProp = {
 		page: null,
 		error: null,
 		list,
 		server,
 		isPageNotFound: false,
+		requireSetup: false,
 	};
+	if (meta.requireSetup) {
+		props.requireSetup = true;
+		return {props};
+	}
 	try {
 		props.page = await readPage(path);
 	} catch (e) {
