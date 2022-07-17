@@ -1,4 +1,4 @@
-import type { NextPage } from 'next'
+import type { NextPage } from 'next';
 import styled from 'styled-components';
 
 import { CommonHead } from '@/components/CommonHead';
@@ -17,27 +17,27 @@ const Card = styled.div`
 `;
 
 const Login: NextPage = () => {
-  return (
-    <Container className="flex f-center f-middle">
-      <CommonHead>
-        <title>ログイン - PaperStock</title>
-      </CommonHead>
-      <Card className="card shadow-2 fade up">
-        <div className="body px-5 py-3">
-          <h1>PaperStock</h1>
-          <label className="input-field">
+	return (
+		<Container className="flex f-center f-middle">
+			<CommonHead>
+				<title>ログイン - PaperStock</title>
+			</CommonHead>
+			<Card className="card shadow-2 fade up">
+				<div className="body px-5 py-3">
+					<h1>PaperStock</h1>
+					<label className="input-field">
             ユーザー名
-            <input type="text" />
-          </label>
-          <label className="input-field">
+						<input type="text" />
+					</label>
+					<label className="input-field">
             パスワード
-            <input type="password" autoComplete="new-password" />
-          </label>
-          <button className="btn primary fluid mt-5">ログイン</button>
-        </div>
-      </Card>
-    </Container>
-  )
-}
+						<input type="password" autoComplete="new-password" />
+					</label>
+					<button className="btn primary fluid mt-5">ログイン</button>
+				</div>
+			</Card>
+		</Container>
+	);
+};
 
 export default Login;

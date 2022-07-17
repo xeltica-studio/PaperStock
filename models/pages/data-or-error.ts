@@ -1,5 +1,4 @@
-import { ApiErrorCode } from "../api/error-code";
-import { ApiErrorObject } from "../api/object";
+import { ApiErrorObject } from '../api/object';
 
 /**
  * データまたはエラーを表すオブジェクト

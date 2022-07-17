@@ -6,12 +6,12 @@ import 'xeltica-ui/dist/css/xeltica-ui.min.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <GlobalStyle />
-      <Component {...pageProps} />
-    </>
-  );
+	return (
+		<>
+			<GlobalStyle />
+			<Component {...pageProps} />
+		</>
+	);
 }
 
 export default MyApp;

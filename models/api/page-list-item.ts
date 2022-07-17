@@ -1,4 +1,4 @@
-import { Page } from "@prisma/client";
+import { Page } from '@prisma/client';
 
 /**
  * API戻り値 ページ一覧の項目

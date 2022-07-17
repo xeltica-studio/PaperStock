@@ -1,10 +1,10 @@
-import { NextApiHandler } from "next";
+import { NextApiHandler } from 'next';
 
 const handler: NextApiHandler = async (req, res) => {
-  res.json({
-    ok: true,
-    q: req.query
-  });
+	res.json({
+		ok: true,
+		q: req.query
+	});
 };
 
 export default handler;

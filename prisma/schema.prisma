@@ -17,7 +17,7 @@ model User {
   // 作成日時
   createdAt DateTime @default(now())
   // 名前
-  name String? @db.VarChar(128)
+  name String? @db.VarChar(128) @unique
   // ロール
   role Role @default(user)
   // 削除フラグ
@@ -25,7 +25,7 @@ model User {
   // パスワードのハッシュ
   hashedPassword String
   // APIアクセストークン
-  accessToken String
+  accessToken String @unique
 
   // 執筆した記事
   authoredPages Page[] @relation("author")

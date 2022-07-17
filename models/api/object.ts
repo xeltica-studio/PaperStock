@@ -1,4 +1,4 @@
-import { ApiErrorCode } from "@/models/api/error-code";
+import { ApiErrorCode } from '@/models/api/error-code';
 
 /**
  * API オブジェクト
