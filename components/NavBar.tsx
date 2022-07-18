@@ -37,7 +37,7 @@ export type Command = {
 
 export const NavBar: FC<NavBarProp> = ({title, titleHref, leftCommands, rightCommands, onBackButton}) => {
 	const renderCommand = (c: Command) => {
-		const className = `btn text-white ${c.buttonClass ?? 'flat'}`;
+		const className = `btn ${c.buttonClass ?? 'flat'}`;
 		const content = <>{c.iconClass && <i className={`${c.iconClass} fa-fw ${c.label ? 'mr-1' : ''}`}/>}{c.label}</>;
 		if (c.type === 'button') {
 			return <button className={className} disabled={c.isDisabled} onClick={c.onClick}>{content}</button>;
@@ -51,13 +51,13 @@ export const NavBar: FC<NavBarProp> = ({title, titleHref, leftCommands, rightCom
 	const titleH1 = title && <h1 className="navbar-title mr-auto">{title}</h1>;
 
 	return (
-		<StyledHeader className="navbar bg-primary shadow-4">
+		<StyledHeader className="navbar bg-panel shadow-4 px-1">
 			{onBackButton && (
-				<button className="btn flat mr-1 text-white" onClick={onBackButton}>
+				<button className="btn flat mr-1" onClick={onBackButton}>
 					<i className="fas fa-arrow-left" />
 				</button>
 			)}
-			{titleHref ? <Link href={titleHref}><a>{titleH1}</a></Link> : titleH1}
+			{titleHref ? <Link href={titleHref}><a className="ml-4">{titleH1}</a></Link> : titleH1}
 			{leftCommands && (
 				<div className="hstack slim">
 					{leftCommands.map(renderCommand)}

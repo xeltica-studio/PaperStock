@@ -63,6 +63,8 @@ const handler: NextApiHandler = async (req, res) => {
 			if (!is(body, CreatePageBodyStruct)) {
 				return returnError(res, 'INVALID_PARAMS', 400);
 			}
+			if (!body.title) return returnError(res, 'INVALID_PARAMS', 400, 'title');
+			if (!body.body) return returnError(res, 'INVALID_PARAMS', 400, 'body');
 			const page = await prisma.page.findUnique({
 				where: { path },
 			});
@@ -87,12 +89,21 @@ const handler: NextApiHandler = async (req, res) => {
 			if (!is(body, UpdatePageBodyStruct)) {
 				return returnError(res, 'INVALID_PARAMS', 400);
 			}
+			if (!body.title) return returnError(res, 'INVALID_PARAMS', 400, 'title');
+			if (!body.body) return returnError(res, 'INVALID_PARAMS', 400, 'body');
 			const page = await prisma.page.findUnique({
 				where: { path },
 			});
 			if (!page) {
 				return returnError(res, 'PAGE_NOT_FOUND', 404);
 			}
+			await prisma.pageHistory.create({
+				data: {
+					pageId: page.id,
+					title: page.title,
+					body: page.body,
+				},
+			});
 			await prisma.page.update({
 				where: {
 					path

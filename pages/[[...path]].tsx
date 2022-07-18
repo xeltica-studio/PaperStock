@@ -11,11 +11,14 @@ import { ApiErrorObject } from '@/models/api/object';
 import { readMeta, readPage, readPages, readServerSetting } from '@/client/api';
 import { ApiError } from '@/client/http';
 import { ServerSetting } from '@prisma/client';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { sanitizePath } from '@/misc/sanitize-path';
 import { isValidPath } from '@/misc/validate-path';
 import { getPathFromQuery } from '@/misc/get-path-from-query';
 import { SetupPage } from '@/components/SetupPage';
+import { readUser } from '@/client/storage';
+import { ApiSigninResponse } from '@/models/api/signin-response';
+import { Command } from '@/components/NavBar';
 
 export type WikiPageProp = {
   page: ApiPage | null;
@@ -57,6 +60,7 @@ export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error, req
 	const router = useRouter();
 	const path = getPathFromQuery(router.query);
 	const [isVisibleDrawer, setVisibleDrawer] = useState(false);
+	const [user, setUser] = useState<ApiSigninResponse | null>(null);
 
 	const hideDrawer = useCallback(() => setVisibleDrawer(false), []);
 	const showDrawer = useCallback(() => setVisibleDrawer(true), []);
@@ -92,8 +96,8 @@ export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error, req
 		<>
 			<div className="menu">
 				{list.map(l => (
-					<Link key={l.id} href={`/${l.path}`} onClick={hideDrawer}>
-						<a className="item">
+					<Link key={l.id} href={`/${l.path}`}>
+						<a className="item" onClick={hideDrawer}>
 							<i className="icon fas fa-chevron-right" /> {l.title}
 						</a>
 					</Link>
@@ -104,11 +108,28 @@ export const WikiPage: React.FC<WikiPageProp> = ({page, list, server, error, req
 			</button>
 		</>
 	);
+	
+	useEffect(() => {
+		setUser(readUser());
+	}, []);
+
+	const signinButton: Command = {
+		type: 'link',
+		href: '/s/login',
+		label: 'ログイン',
+		iconClass: 'fas fa-user-circle'
+	};
+
+	const accountButton: Command = {
+		type: 'button',
+		label: user?.name ?? '',
+		iconClass: 'fas fa-user-circle'
+	};
 
 	return requireSetup ? <SetupPage /> : (
 		<AppRoot title={server.serverName ?? ''} titleHref="/" rightCommands={[
-			{type: 'link', href: `/s/edit?path=${encodeURIComponent(path)}`, label: '編集', iconClass: 'fas fa-pen-to-square' },
-			{type: 'button', iconClass: 'fas fa-ellipsis-h' },
+			{type: 'link', href: `/s/edit?path=${encodeURIComponent(path)}`, label: '編集', iconClass: 'fas fa-pen-to-square', buttonClass: 'primary' },
+			(user ? accountButton : signinButton),
 		]}>
 			<CommonHead>
 				<title>{error ? 'エラー' : page?.title} - PaperStock</title>

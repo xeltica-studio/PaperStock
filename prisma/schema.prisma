@@ -109,6 +109,10 @@ model PageHistory {
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
   // 更新者のID
   userId String?
+  // タイトル
+  title String
+  // 本文
+  body String
 }
 
 model ServerSetting {

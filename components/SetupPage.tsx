@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { REGEX_NAME } from '@/const';
 import * as api from '@/client/api';
+import { writeUser } from '@/client/storage';
 
 const SetupPageRoot = styled.div`
   min-height: 100vh;
@@ -31,7 +32,7 @@ export const SetupPage: React.FC = () => {
 
 	const isNameSuitable = REGEX_NAME.test(name);
 	const isPasswordMatch = Boolean(password) && password === password2;
-	const canSignup = isProcessing || (isNameSuitable && isPasswordMatch);
+	const canSignup = !isProcessing && isNameSuitable && isPasswordMatch;
 
 	const validateName = () => {
 		setNameValidationText(
@@ -54,7 +55,10 @@ export const SetupPage: React.FC = () => {
 	const signup = () => {
 		setProcessing(true);
 		api.signup(name, password)
-			.then(() => location.reload())
+			.then((u) => {
+				writeUser(u);
+				location.reload();
+			})
 			.catch((e) => alert(e))
 			.finally(() => setProcessing(false));
 	};

@@ -9,6 +9,7 @@ import { createPage, readPage, updatePage } from '@/client/api';
 import { sanitizePath } from '@/misc/sanitize-path';
 import { isSystemPath, isValidPath } from '@/misc/validate-path';
 import { getPathFromQuery } from '@/misc/get-path-from-query';
+import { ApiError } from '@/client/http';
 
 const Editor = styled.textarea`
   max-width: 100%;
@@ -31,16 +32,22 @@ const EditPage: NextPage<EditPageProp> = ({initialTitle, initialBody, isNewPage}
 	const save = async () => {
 		const path = getPathFromQuery(router.query);
 		setDisabled(true);
-		if (isNewPage) {
-			await createPage(path, {
-				title, body
-			});
-		} else {
-			await updatePage(path, {
-				title, body
-			});
+		try {
+			if (isNewPage) {
+				await createPage(path, {
+					title, body
+				});
+			} else {
+				await updatePage(path, {
+					title, body
+				});
+			}
+			router.push(`/${path}`);
+		} catch (e) {
+			alert(e);
+		} finally {
+			setDisabled(false);
 		}
-		router.push(`/${path}`);
 	};
 
 	const pageTitle = isNewPage ? 'ページの新規作成' : 'ページの編集';
